@@ -1,18 +1,11 @@
 <template>
   <div id="spinner-wrap" v-if="loading">
-    <q-spinner-ios size="60px" color="purple" :thickness="10" id="spinner" />
+    <q-spinner-ios size="60px" color="red-3" :thickness="10" id="spinner" />
   </div>
 </template>
 
 <script setup>
 const loading = defineModel();
-
-watch(
-  () => loading.value,
-  (newValue, oldValue) => {
-    console.log(newValue, oldValue);
-  },
-);
 </script>
 <style scoped>
 #spinner-wrap {

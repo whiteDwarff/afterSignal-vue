@@ -3,10 +3,23 @@ import { Notify } from 'quasar';
 /**
  * @param { string } message notify 메시지 ( 필수값 )
  * @param { object } [options=null] 그 외 옵션, 기본값 : null
+ *  */
+export function baseNotify(message, options) {
+  return Notify.create({
+    message,
+    html: true,
+    ...options,
+    timeout: options?.timeout || 500,
+  });
+}
+
+/**
+ * @param { string } message notify 메시지 ( 필수값 )
+ * @param { object } [options=null] 그 외 옵션, 기본값 : null
  * @param { function() } callback **익명함수**  () => { 함수1, 함수2 }, 기본값 : null
  * @param { boolean } actions notify actions 사용 유무, 기본값 : false
  */
-export function baseNotify(
+export function actionNotify(
   message,
   options = null,
   callback = null,

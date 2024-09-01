@@ -39,17 +39,21 @@ const validatePassword = (val) => {
 /**
  * @param { string } password 현재 비밀번호
  * @param { passwordConfirm } 비밀번호 확인 현재 비밀번호
- * @returns { boolean } 두 비밀번호가 같으면 true 반환
- * @returns { string } 두 비밀번호가 다르면 message 반환
+ * @returns { boolean, string } 두 비밀번호가 같으면 true, 다르면 message 반환
  * -------------------------------------------------------------------
  * @description 회원가입, 회원정보 수정 시 비밀번호 확인
  */
 const validatePasswordConfirm = (password, passwordConfirm) =>
   password === passwordConfirm || '비밀번호가 일치하지 않습니다';
 
+const inputEmptyCheck = (val, type) => {
+  return !!val || `${type}을 입력해주세요`;
+};
+
 export {
   validateEmail,
   validatePassword,
   validateTel,
   validatePasswordConfirm,
+  inputEmptyCheck,
 };

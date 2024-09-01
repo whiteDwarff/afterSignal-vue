@@ -26,7 +26,7 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['common'],
+    boot: ['common', { server: false, path: 'brand-colors' }],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
@@ -100,7 +100,7 @@ module.exports = configure(function (/* ctx */) {
         ['vite-plugin-vue-layouts', {}],
         /**
          * @install : npm i -D unplugin-auto-import
-         * @dob     : https://github.com/unplugin/unplugin-auto-import?tab=readme-ov-file
+         * @doc     : https://github.com/unplugin/unplugin-auto-import?tab=readme-ov-file
          */
         [
           'unplugin-auto-import/vite',
@@ -113,12 +113,17 @@ module.exports = configure(function (/* ctx */) {
               'quasar',
               'pinia',
             ],
-            dirs: ['src/service/**', 'src/utils/**', 'src/boot/**'],
+            dirs: [
+              'src/service/**',
+              'src/utils/**',
+              'src/boot/**',
+              'src/options/**',
+            ],
           },
         ],
         /**
          * @install : npm i unplugin-vue-components -D
-         * @dob     : https://github.com/unplugin/unplugin-vue-components
+         * @doc     : https://github.com/unplugin/unplugin-vue-components
          */
         [
           'unplugin-vue-components/vite',
@@ -264,7 +269,7 @@ module.exports = configure(function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'vue3-quasar-project',
+        appId: 'afterSignal',
       },
     },
 
