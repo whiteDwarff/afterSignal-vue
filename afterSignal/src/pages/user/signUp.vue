@@ -3,7 +3,7 @@
     <div class="text-center q-mb-lg">
       <span class="text-h4">Sign up</span>
     </div>
-    <q-form @submit.prevent>
+    <q-form @submit.prevent="signUpUser">
       <!-- 이메일 -->
       <q-card-section class="q-pb-none">
         <small class="block q-mb-sm">* E-mail</small>
@@ -104,11 +104,14 @@
         <div class="row q-col-gutter-sm">
           <q-select
             v-model="form.firstTel"
-            :options="FIR_TEL_OPTIONS"
+            :options
             dense
             outlined
             class="col-6"
             color="red-3"
+            options-dense
+            emit-value
+            map-options
           ></q-select>
           <q-input
             v-model="form.otherTel"
@@ -119,11 +122,16 @@
             mask="####-####"
             minlength="8"
             maxlength="9"
-            :rules="[(val) => inputEmptyCheck(val, '전화번호(를)')]"
+            :rules="[(val) => validateTel(form.firstTel + val)]"
             lazy-rules
             hide-bottom-space
           />
         </div>
+      </q-card-section>
+
+      <q-card-section class="q-pb-none">
+        <small class="block q-mb-sm">CITY</small>
+        <q-select dense outlined color="red-3"></q-select>
       </q-card-section>
 
       <!-- 
@@ -192,8 +200,9 @@ import {
   inputEmptyCheck,
 } from '/src/utils/validate-rules';
 
-import { FIR_TEL_OPTIONS } from 'src/options/common';
+import { FIR_TEL_OPTIONS as options } from 'src/options/common';
 import { useSystemStore } from 'src/stores/systemStore';
+import { baseNotify } from 'src/utils/base-notify';
 
 const systemStore = useSystemStore();
 const { isLoadingState } = storeToRefs(systemStore);
@@ -206,7 +215,7 @@ const form = ref({
   passwordConfirm: '',
   nickname: '',
   name: '',
-  firstTel: '010',
+  firstTel: '010-',
   otherTel: '',
   tel: '',
   isNicknameCheck: false,
@@ -216,7 +225,7 @@ const duplicateEmailCheck = async () => {
   if (!form.value.nickname)
     return baseNotify('닉네임을 입력해주세요.', { type: 'warning' });
 
-  isLoadingState.value = !isLoadingState.value;
+  isLoadingState.value = true;
   try {
     const res = await api.post('/user/duplicatedEmailCheck', form.value);
     console.log(res);
@@ -227,10 +236,23 @@ const duplicateEmailCheck = async () => {
         form.value.isNicknameCheck = true;
       }
     }
+    isLoadingState.value = false;
   } catch (err) {
     console.log(err);
-  } finally {
-    isLoadingState.value = !isLoadingState.value;
+  }
+};
+
+const signUpUser = async () => {
+  if (!form.value.isNicknameCheck)
+    return baseNotify('닉네임 중복검사를 진행해주세요.');
+  form.value.tel = form.value.firstTel + form.value.otherTel;
+  isLoadingState.value = true;
+  try {
+    const res = await api.post('/user/signUpUser', form.value);
+    console.log(res);
+    isLoadingState.value = false;
+  } catch (err) {
+    console.log(err);
   }
 };
 </script>

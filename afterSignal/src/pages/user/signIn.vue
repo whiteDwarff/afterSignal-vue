@@ -58,11 +58,15 @@
       <q-card-section class="q-mt-md">
         <div class="row q-col-gutter-y-md">
           <div class="col-12 col-md-6 text-center decoration-none">
-            <router-link to="/user/findEmail" class="text-grey-9">
+            <router-link
+              to="/user/findEmail"
+              class="text-grey-9 underline-hover"
+            >
               FORGOT ID
             </router-link>
-            <router-link to="/user/findPW" class="text-grey-9"
-              >&nbsp;/&nbsp;PW</router-link
+            &nbsp;/&nbsp;
+            <router-link to="/user/findPW" class="text-grey-9 underline-hover"
+              >PW</router-link
             >
           </div>
           <div class="col-12 col-md-6 text-center decoration-none">
@@ -88,4 +92,13 @@ const form = ref({
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.underline-hover {
+  transition: 0.4s ease 0s;
+}
+.underline-hover:hover {
+  text-decoration: underline;
+  text-decoration-color: #6d3f37;
+  text-underline-offset: 5px;
+}
+</style>
