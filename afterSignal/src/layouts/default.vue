@@ -90,8 +90,9 @@ import { useSystemStore } from 'src/stores/systemStore';
 const systemStore = useSystemStore();
 const { isLoadingState } = storeToRefs(systemStore);
 
-const route = useRouter();
+const route = useRoute();
 
+console.log(route.meta);
 const pageContainerStyles = computed(() => ({
   maxWidth: route.meta?.width || '1310px',
   margin: '0 auto',

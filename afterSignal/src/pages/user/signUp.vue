@@ -134,48 +134,6 @@
         <q-select dense outlined color="red-3"></q-select>
       </q-card-section>
 
-      <!-- 
-			회원정보 수정 시 
-			거주지 
-      <q-card-section class="q-pb-none">
-        <div class="row q-col-gutter-sm">
-          <div class="col-6">
-            <small class="block q-mb-sm">CITY</small>
-            <q-select dense outlined color="red-3"></q-select>
-          </div>
-          <div class="col-6">
-            <small class="block q-mb-sm">DISTRICT</small>
-            <q-select dense outlined color="red-3"></q-select>
-          </div>
-        </div>
-      </q-card-section>
-      성별 
-      <q-card-section class="q-pb-none">
-        <small class="block q-mb-sm">* Gender</small>
-        <div class="row q-col-gutter-sm">
-          <div class="col-6">
-            <q-btn
-              @click="form.gender = 'M'"
-              class="border full-width"
-              :class="form.gender == 'M' ? 'bg-red-3 text-white' : ''"
-              label="Male"
-              :ripple="false"
-              unelevated
-            />
-          </div>
-          <div class="col-6">
-            <q-btn
-              @click="form.gender = 'F'"
-              class="border full-width"
-              :class="form.gender == 'F' ? 'bg-red-3 text-white' : ''"
-              label="Female"
-              :ripple="false"
-              unelevated
-            />
-          </div>
-        </div>
-      </q-card-section>
-		-->
       <q-card-section class="q-mt-xl text-center">
         <q-btn
           id="user-form-submit-btn"
