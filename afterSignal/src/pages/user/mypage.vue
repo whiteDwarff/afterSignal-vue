@@ -25,8 +25,6 @@
 </template>
 
 <script setup>
-import { watch } from 'vue';
-
 const router = useRouter();
 // defineAsyncComponent setup ---------------------------------------
 const view = ref([

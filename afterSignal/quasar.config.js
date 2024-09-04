@@ -68,6 +68,7 @@ module.exports = configure(function (/* ctx */) {
       env: {
         SERVER_PORT: 'http://localhost:8080',
         IMAGE_EXT: '.jpg,.jpeg,.png,.gif',
+        PROFILE_EXT: '.jpg,.jpeg,.png',
         RECAPTCHA_KEY: '6LciT7UpAAAAANSu16zb0AP7CIN_-ME28OrfhtkE',
       },
       // rawDefine: {}

@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lff" class="bg-white">
     <q-header unelevated class="bg-white text-black">
-      <q-toolbar :style="pageContainerStyles" class="border-bottom q-py-md">
+      <q-toolbar class="border-bottom q-py-md semantic-wrap">
         <q-toolbar-title>
           <!--  <q-avatar>LOGO</q-avatar> -->
           <router-link to="/" class="decoration-none text-black"
@@ -73,7 +73,7 @@
     </q-page-container>
 
     <q-footer unelevated class="bg-black">
-      <q-toolbar :style="pageContainerStyles" class="q-py-lg">
+      <q-toolbar class="q-py-lg semantic-wrap">
         <q-toolbar-title>
           <div>FOOTER</div>
         </q-toolbar-title>
@@ -92,7 +92,6 @@ const { isLoadingState } = storeToRefs(systemStore);
 
 const route = useRoute();
 
-console.log(route.meta);
 const pageContainerStyles = computed(() => ({
   maxWidth: route.meta?.width || '1310px',
   margin: '0 auto',
@@ -100,6 +99,10 @@ const pageContainerStyles = computed(() => ({
 </script>
 
 <style>
+.semantic-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+}
 a {
   text-decoration: none;
 }
@@ -129,6 +132,12 @@ a {
 /* input, select, textarea > default border color 변경 */
 .q-field--outlined .q-field__control:before {
   border: 1px #868686 solid !important;
+}
+/* input focus 시 생기는 border 제거  */
+.q-field__control {
+  &::after {
+    border: none !important;
+  }
 }
 
 .border {
