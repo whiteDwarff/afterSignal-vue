@@ -209,6 +209,8 @@ const signUpUser = async () => {
 
   form.value.tel = `${form.value.firstTel}-${form.value.otherTel}`;
 
+  isLoadingState.value = true;
+
   try {
     const res = await api.post('/user/signUpUser', form.value);
     console.log(res);
@@ -217,7 +219,7 @@ const signUpUser = async () => {
   } catch (err) {
     console.log(err);
   } finally {
-    isLoadingState.value = true;
+    isLoadingState.value = false;
   }
 };
 </script>
