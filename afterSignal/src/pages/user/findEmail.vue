@@ -1,7 +1,7 @@
 <template>
   <q-card flat class="user-form-wrap q-py-xl">
     <div class="text-center q-mb-lg">
-      <span class="text-h4">Forgot ID</span>
+      <span class="text-h4">Forgot E-mail</span>
     </div>
     <q-form @submit.prevent="findUserEmail">
       <!-- 이름 -->
@@ -54,7 +54,7 @@
           id="user-form-submit-btn"
           label="SUBMIT"
           type="submit"
-          class="border bg-red-3 text-white"
+          class="border bg-red-2 text-white"
           unelevated
           size="lg"
         />
@@ -67,14 +67,14 @@
 import { storeToRefs } from 'pinia';
 import { useSystemStore } from 'src/stores/systemStore';
 import { inputEmptyCheck, validateTel } from '/src/utils/validate-rules';
-import { FIR_TEL_OPTIONS as options } from 'src/options/common';
+import { firstTelOptions as options } from 'src/options/common';
 
 const systemStore = useSystemStore();
 const { isLoadingState } = storeToRefs(systemStore);
 
 const form = ref({
   name: '',
-  firstTel: '010-',
+  firstTel: '010',
   otherTel: '',
   tel: '',
 });

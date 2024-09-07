@@ -12,13 +12,13 @@
     <q-pagination
       :min="page?.min || 1"
       :max="page?.max || 1"
-      :max-pages="page.maxPages"
+      :max-pages="page?.maxPages"
       v-model="page.current"
       :boundary-numbers="false"
       :ellipses="false"
       @update:model-value="$emit('update:modelValue')"
       color="grey"
-      active-color="primary"
+      active-color="red-2"
       rounded
       direction-links
       boundary-links

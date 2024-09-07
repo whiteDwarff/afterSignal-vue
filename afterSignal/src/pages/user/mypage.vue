@@ -2,7 +2,7 @@
   <q-card flat>
     <div class="row">
       <!-- nav -->
-      <q-card-section class="col-12 col-sm-3">
+      <q-card-section id="subNav" class="col-12 col-sm-3">
         <q-list class="border" style="border-bottom: none">
           <q-item
             v-for="item of view"
@@ -18,13 +18,15 @@
       </q-card-section>
       <!-- component -->
       <q-card-section class="col-12 col-sm-9">
-        <component :is="userViewComponents[viewMode]" />
+        <component :is="userViewComponents[viewMode]" :viewMode />
       </q-card-section>
     </div>
   </q-card>
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
+
 const router = useRouter();
 // defineAsyncComponent setup ---------------------------------------
 const view = ref([
@@ -33,6 +35,7 @@ const view = ref([
   { name: 'Payment History', value: 'payment' },
   { name: 'Point History', value: 'point' },
 ]);
+
 // 새로고침 시 현제 페이지 유지하기
 const viewMode = ref(useRoute().query?.view || 'profile');
 // nav 클릭 시 router에 쿼리 추가
@@ -49,7 +52,7 @@ const userViewComponents = {
     import('./components/PasswordUpdateView.vue'),
   ),
   payment: defineAsyncComponent(() => import('./components/PayMentView.vue')),
-  point: defineAsyncComponent(() => import('./components/PointView.vue')),
+  point: defineAsyncComponent(() => import('./components/PayMentView.vue')),
 };
 </script>
 

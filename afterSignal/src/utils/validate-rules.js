@@ -17,7 +17,8 @@ const validateEmail = (val) => {
  * -------------------------------------------------------------------
  * @description 휴대폰 번호 유효성 검사 ( '-'을 포함한 휴대폰 번호 유효성 검사 )
  */
-const validateTel = (val) => {
+const validateTel = ({ firstTel, otherTel }) => {
+  const val = firstTel + otherTel;
   const reg = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
   return reg.test(val) || '휴대폰 번호 형식이 아닙니다';
 };
@@ -47,7 +48,7 @@ const validatePasswordConfirm = (password, passwordConfirm) =>
   password === passwordConfirm || '비밀번호가 일치하지 않습니다';
 
 const inputEmptyCheck = (val, type) => {
-  return !!val || `${type}을 입력해주세요`;
+  return !!val || `${type} 입력해주세요`;
 };
 
 export {

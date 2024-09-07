@@ -154,6 +154,24 @@ a {
 .decoration-none {
   text-decoration: none;
 }
+
+/* @media */
+@media screen and (max-width: 900px) {
+  .user-form-wrap {
+    width: 70%;
+  }
+  #user-form-submit-btn {
+    width: 70%;
+  }
+}
+@media screen and (max-width: 600px) {
+  .user-form-wrap {
+    width: 90%;
+  }
+  #user-form-submit-btn {
+    width: 100%;
+  }
+}
 </style>
 
 <style scoped></style>

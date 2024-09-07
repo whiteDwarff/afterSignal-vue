@@ -36,7 +36,7 @@
         <q-checkbox
           dense
           v-model="form.isLoginInfoSaved"
-          label="Remember login info"
+          label="Remember Me"
           color="deep-purple-3"
           class="q-mt-md"
         />
@@ -47,7 +47,7 @@
           label="SUBMIT"
           type="submit"
           id="user-form-submit-btn"
-          class="bg-red-3 text-white border"
+          class="bg-red-2 text-white border"
           unelevated
           size="lg"
         />
@@ -57,19 +57,19 @@
 
       <q-card-section class="q-mt-md">
         <div class="row q-col-gutter-y-md">
-          <div class="col-12 col-md-6 text-center decoration-none">
+          <div class="col-12 col-sm-6 text-center decoration-none">
             <router-link
               to="/user/findEmail"
               class="text-grey-9 underline-hover"
             >
-              FORGOT ID
+              FORGOT E-mail
             </router-link>
             &nbsp;/&nbsp;
             <router-link to="/user/findPW" class="text-grey-9 underline-hover"
               >PW</router-link
             >
           </div>
-          <div class="col-12 col-md-6 text-center decoration-none">
+          <div class="col-12 col-sm-6 text-center decoration-none">
             <router-link to="/user/signUp" class="text-grey-9"
               >SIGN UP</router-link
             >

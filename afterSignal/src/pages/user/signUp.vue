@@ -49,7 +49,7 @@
         >
           <template v-slot:append>
             <q-icon
-              :name="passwordType ? 'visibility' : 'visibility_off'"
+              :name="passwordType ? 'lock_open' : 'lock'"
               @click="passwordType = !passwordType"
               class="cursor-pointer"
             />
@@ -67,7 +67,7 @@
             outlined
             color="red-3"
             maxlength="10"
-            :rules="[(val) => inputEmptyCheck(val, '닉네임')]"
+            :rules="[(val) => inputEmptyCheck(val, '닉네임을')]"
             lazy-rules
             hide-bottom-space
             :readonly="form.isNicknameCheck"
@@ -93,7 +93,7 @@
           outlined
           color="red-3"
           maxlength="5"
-          :rules="[(val) => inputEmptyCheck(val, '이름')]"
+          :rules="[(val) => inputEmptyCheck(val, '이름을')]"
           lazy-rules
           hide-bottom-space
         />
@@ -122,7 +122,7 @@
             mask="####-####"
             minlength="8"
             maxlength="9"
-            :rules="[(val) => validateTel(form.firstTel + val)]"
+            :rules="[(val) => validateTel(form)]"
             lazy-rules
             hide-bottom-space
           />
@@ -139,7 +139,7 @@
           id="user-form-submit-btn"
           label="SUBMIT"
           type="submit"
-          class="border bg-red-3 text-white"
+          class="border bg-red-2 text-white"
           unelevated
           size="lg"
         />
@@ -158,12 +158,14 @@ import {
   inputEmptyCheck,
 } from '/src/utils/validate-rules';
 
-import { FIR_TEL_OPTIONS as options } from 'src/options/common';
+import { firstTelOptions as options } from 'src/options/common';
 import { useSystemStore } from 'src/stores/systemStore';
 import { baseNotify } from 'src/utils/base-notify';
 
 const systemStore = useSystemStore();
 const { isLoadingState } = storeToRefs(systemStore);
+
+const router = useRouter();
 
 const passwordType = ref(false);
 
@@ -173,7 +175,7 @@ const form = ref({
   passwordConfirm: '',
   nickname: '',
   name: '',
-  firstTel: '010-',
+  firstTel: '010',
   otherTel: '',
   tel: '',
   isNicknameCheck: false,
@@ -194,23 +196,28 @@ const duplicateEmailCheck = async () => {
         form.value.isNicknameCheck = true;
       }
     }
-    isLoadingState.value = false;
   } catch (err) {
     console.log(err);
+  } finally {
+    isLoadingState.value = false;
   }
 };
 
 const signUpUser = async () => {
   if (!form.value.isNicknameCheck)
     return baseNotify('닉네임 중복검사를 진행해주세요.');
-  form.value.tel = form.value.firstTel + form.value.otherTel;
-  isLoadingState.value = true;
+
+  form.value.tel = `${form.value.firstTel}-${form.value.otherTel}`;
+
   try {
     const res = await api.post('/user/signUpUser', form.value);
     console.log(res);
-    isLoadingState.value = false;
+    alert('회원가입이 완료되었습니다. 로그인 후 이용해주세요.');
+    router.push('/user/signIn');
   } catch (err) {
     console.log(err);
+  } finally {
+    isLoadingState.value = true;
   }
 };
 </script>

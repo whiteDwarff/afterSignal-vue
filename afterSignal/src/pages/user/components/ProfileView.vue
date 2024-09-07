@@ -1,8 +1,8 @@
 <template>
-  <q-card flat class="q-py-lg row border no-border-radius">
+  <q-card flat class="row border no-border-radius">
     <q-card-section class="col-12 col-md-8 q-pr-none">
       <q-form>
-        <q-card-section class="q-py-xs">
+        <q-card-section class="q-py-none">
           <small class="block q-mb-sm">E-mail</small>
           <q-input
             v-model="form.email"
@@ -14,7 +14,7 @@
           />
         </q-card-section>
         <!-- 이름 -->
-        <q-card-section class="q-py-xs">
+        <q-card-section class="q-pb-none">
           <small class="block q-mb-sm">Name</small>
           <q-input v-model="form.name" dense outlined maxlength="5" readonly />
         </q-card-section>
@@ -42,7 +42,7 @@
           </div>
         </q-card-section>
         <!-- 닉네임 -->
-        <q-card-section class="q-py-xs">
+        <q-card-section class="q-pb-none">
           <small class="block q-mb-sm">Nickname</small>
           <div class="row q-col-gutter-x-sm input-focus">
             <q-input
@@ -65,45 +65,57 @@
           </div>
         </q-card-section>
         <!-- 휴대폰 번호 -->
-        <q-card-section class="q-py-xs">
-          <small class="block q-mb-sm">Mobile phone</small>
+        <q-card-section class="q-pb-none">
+          <small class="block q-mb-sm">* Mobile phone</small>
           <div class="row q-col-gutter-sm">
             <q-select
+              v-model="form.firstTel"
               dense
               outlined
               class="col-6"
               options-dense
+              :options
               emit-value
               map-options
             />
             <q-input
+              v-model="form.otherTel"
               dense
               outlined
               class="col-6"
               mask="####-####"
               minlength="8"
               maxlength="9"
+              :rules="[(val) => validateTel(form)]"
               lazy-rules
               hide-bottom-space
             />
           </div>
         </q-card-section>
-        <q-card-section class="q-py-xs">
+        <q-card-section class="q-pb-none">
           <div class="row q-col-gutter-sm">
             <div class="col-6">
               <small class="block q-mb-sm">CITY</small>
-              <q-select dense outlined></q-select>
+              <q-select
+                dense
+                outlined
+                :rules="[(val) => inputEmptyCheck(val, '도시를')]"
+              ></q-select>
             </div>
             <div class="col-6">
               <small class="block q-mb-sm">DISTRICT</small>
-              <q-select dense outlined></q-select>
+              <q-select
+                dense
+                outlined
+                :rules="[(val) => inputEmptyCheck(val, '지역(구)를')]"
+              ></q-select>
             </div>
           </div>
         </q-card-section>
       </q-form>
     </q-card-section>
 
-    <q-card-section class="col-12 col-md-4 q-pl-none">
+    <q-card-section class="col-12 col-md-4 q-pl-none q-pb-xl">
       <div class="full-height flex justify-center items-center">
         <q-btn :ripple="false" flat>
           <q-avatar size="200px" class="cursor-pointer shadow-5">
@@ -118,7 +130,7 @@
                 dense
                 class="items-center"
               >
-                <q-icon name="sym_o_add_circle" class="q-mr-sm" />
+                <q-icon name="sym_o_add_circle" class="q-mr-sm" color="teal" />
                 ADD
               </q-item>
               <q-separator></q-separator>
@@ -129,13 +141,14 @@
                 dense
                 class="items-center"
               >
-                <q-icon name="delete" class="q-mr-sm" />
+                <q-icon name="delete" class="q-mr-sm" color="red" />
                 DELETE
               </q-item>
             </q-list>
           </q-menu>
         </q-btn>
       </div>
+
       <input
         type="file"
         ref="fileInput"
@@ -148,12 +161,23 @@
 </template>
 
 <script setup>
+import { firstTelOptions as options } from 'src/options/common';
+import { inputEmptyCheck, validateTel } from '/src/utils/validate-rules';
+
+const props = defineProps({
+  viewMode: {
+    type: String,
+  },
+});
+
 const form = ref({
-  email: '',
-  name: '',
+  email: 'munstarrrrr@gmail.com',
+  name: '강문호',
   gender: 'M',
-  nickname: '',
+  nickname: 'munstarrrr',
   tel: '',
+  firstTel: '010',
+  otherTel: '',
   city: '',
   district: '',
   profileImage: '' || '/src/assets/common/profile_default.png',
