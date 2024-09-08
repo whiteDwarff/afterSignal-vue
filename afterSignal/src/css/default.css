@@ -1,0 +1,56 @@
+.semantic-wrap {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+a {
+  text-decoration: none;
+}
+.nav-item {
+  transition: 0.4s ease 0s;
+}
+.nav-item:hover {
+  color: #6d3f37;
+}
+/* 반응형 구현 */
+.user-form-wrap {
+  width: 60%;
+  margin: 0 auto;
+  transition: 0.4s ease-in-out;
+}
+#user-form-submit-btn {
+  width: 40%;
+  transition: 0.4s ease-in-out;
+}
+
+.border {
+  border: 1px solid #868686;
+}
+.border-bottom {
+  border-bottom: 1px solid #868686;
+}
+
+.bg-grey-86 {
+  background-color: #868686;
+}
+
+.decoration-none {
+  text-decoration: none;
+}
+
+/* @media */
+@media screen and (max-width: 900px) {
+  .user-form-wrap {
+    width: 75%;
+  }
+  #user-form-submit-btn {
+    width: 70%;
+  }
+}
+@media screen and (max-width: 600px) {
+  .user-form-wrap {
+    width: 90%;
+  }
+  #user-form-submit-btn {
+    width: 100%;
+  }
+}

@@ -2,8 +2,12 @@
   <q-card flat>
     <div class="row">
       <!-- nav -->
-      <q-card-section id="subNav" class="col-12 col-sm-3">
-        <q-list class="border" style="border-bottom: none">
+      <q-card-section
+        id="sub-nav-section"
+        class="col-12 col-sm-3"
+        style="height: fit-content"
+      >
+        <q-list class="border" ref="subNavRefs" style="border-bottom: none">
           <q-item
             v-for="item of view"
             :key="item.value"
@@ -16,6 +20,7 @@
           </q-item>
         </q-list>
       </q-card-section>
+
       <!-- component -->
       <q-card-section class="col-12 col-sm-9">
         <component :is="userViewComponents[viewMode]" :viewMode />
@@ -26,6 +31,7 @@
 
 <script setup>
 import { onMounted } from 'vue';
+import { useElementSize } from '@vueuse/core';
 
 const router = useRouter();
 // defineAsyncComponent setup ---------------------------------------
@@ -56,9 +62,21 @@ const userViewComponents = {
 };
 </script>
 
-<style></style>
+<style>
+#sub-nav-section {
+  position: sticky;
+  top: 69.69px;
+  left: 0;
+}
+@media screen and (max-width: 600px) {
+  #sub-nav-section {
+    position: unset;
+  }
+}
+</style>
 
 <route lang="yaml">
 meta:
   width: '1100px'
+#  requiresAuth: true
 </route>

@@ -11,12 +11,12 @@
 		-->
     <q-pagination
       v-model="page.current"
+      @update:model-value="$emit('update:modelValue')"
       :min="page?.min || 1"
       :max="page?.max || 1"
       :max-pages="page?.maxPages"
       :boundary-numbers="false"
       :ellipses="false"
-      @update:model-value="$emit('update:modelValue')"
       color="grey"
       active-color="red-2"
       rounded

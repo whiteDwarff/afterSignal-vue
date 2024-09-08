@@ -1,0 +1,27 @@
+/* common */
+
+/* scoll 제거 */
+body {
+  -ms-overflow-style: none;
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* :hover > background 제거 */
+.q-focus-helper {
+  display: none;
+}
+:deep(.q-focus-helper) {
+  display: none;
+}
+/* input, select, textarea > default border color 변경 */
+.q-field--outlined .q-field__control:before {
+  border: 1px #868686 solid !important;
+}
+/* input focus 시 생기는 border 제거  */
+.q-field__control {
+  &::after {
+    border: none !important;
+  }
+}

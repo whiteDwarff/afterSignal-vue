@@ -74,7 +74,7 @@
               outlined
               class="col-6"
               options-dense
-              :options
+              :options="firstTelOptions"
               emit-value
               map-options
             />
@@ -97,18 +97,28 @@
             <div class="col-6">
               <small class="block q-mb-sm">CITY</small>
               <q-select
+                v-model="form.city"
+                :options="options.city"
+                color="red-3"
                 dense
                 outlined
-                :rules="[(val) => inputEmptyCheck(val, '도시를')]"
-              ></q-select>
+                options-dense
+                emit-value
+                map-options
+              />
             </div>
             <div class="col-6">
               <small class="block q-mb-sm">DISTRICT</small>
               <q-select
+                v-model="form.district"
+                :options="options.district"
+                color="red-3"
                 dense
                 outlined
-                :rules="[(val) => inputEmptyCheck(val, '지역(구)를')]"
-              ></q-select>
+                options-dense
+                emit-value
+                map-options
+              />
             </div>
           </div>
         </q-card-section>
@@ -157,18 +167,26 @@
         accept=".jpg,.jpeg,.png"
       />
     </q-card-section>
+    {{ options }}
   </q-card>
 </template>
 
 <script setup>
-import { firstTelOptions as options } from 'src/options/common';
+import { firstTelOptions } from 'src/options/common';
 import { inputEmptyCheck, validateTel } from '/src/utils/validate-rules';
+
+import { useSystemStore } from 'src/stores/systemStore';
+import { storeToRefs } from 'pinia';
+
+const systemStore = useSystemStore();
+const { isLoadingState } = storeToRefs(systemStore);
 
 const props = defineProps({
   viewMode: {
     type: String,
   },
 });
+const options = ref({});
 
 const form = ref({
   email: 'munstarrrrr@gmail.com',
@@ -178,10 +196,33 @@ const form = ref({
   tel: '',
   firstTel: '010',
   otherTel: '',
-  city: '',
-  district: '',
+  city: 'COM0000007',
+  district: 'COM0000025',
   profileImage: '' || '/src/assets/common/profile_default.png',
 });
+
+// 공통코드 받아오기
+const getCommCode = async () => {
+  isLoadingState.value = true;
+
+  try {
+    const { data } = await api.post('/user/signUp');
+    const result = data.result;
+    options.value = { ...result };
+    const key = form.value.district;
+    console.log(key);
+    console.log(options.value[key]);
+
+    // const city = data.result.city;
+    // options.value.city = city;
+    // form.value.city = city[0].value;
+  } catch (err) {
+    console.log(err);
+  } finally {
+    isLoadingState.value = false;
+  }
+};
+getCommCode();
 
 // file input 참초 객체
 const fileInput = ref(null);

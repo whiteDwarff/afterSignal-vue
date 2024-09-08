@@ -104,7 +104,7 @@
         <div class="row q-col-gutter-sm">
           <q-select
             v-model="form.firstTel"
-            :options
+            :options="firstTelOptions"
             dense
             outlined
             class="col-6"
@@ -131,7 +131,16 @@
 
       <q-card-section class="q-pb-none">
         <small class="block q-mb-sm">CITY</small>
-        <q-select dense outlined color="red-3"></q-select>
+        <q-select
+          v-model="form.city"
+          :options="options.city"
+          options-dense
+          emit-value
+          map-options
+          dense
+          outlined
+          color="red-3"
+        ></q-select>
       </q-card-section>
 
       <q-card-section class="q-mt-xl text-center">
@@ -149,7 +158,6 @@
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia';
 import {
   validateEmail,
   validatePassword,
@@ -158,17 +166,18 @@ import {
   inputEmptyCheck,
 } from '/src/utils/validate-rules';
 
-import { firstTelOptions as options } from 'src/options/common';
+import { firstTelOptions } from 'src/options/common';
 import { useSystemStore } from 'src/stores/systemStore';
-import { baseNotify } from 'src/utils/base-notify';
+import { storeToRefs } from 'pinia';
 
 const systemStore = useSystemStore();
 const { isLoadingState } = storeToRefs(systemStore);
 
 const router = useRouter();
 
+// password type state, false ? password : text
 const passwordType = ref(false);
-
+// input form
 const form = ref({
   email: '',
   password: '',
@@ -180,15 +189,33 @@ const form = ref({
   tel: '',
   isNicknameCheck: false,
 });
+// select options
+const options = ref({});
 
+// 공통코드 받아오기
+const getCommCode = async () => {
+  isLoadingState.value = true;
+
+  try {
+    const { data } = await api.post('/user/signUp');
+    options.value = { ...data.result };
+    form.value.city = data.result.city[0].value;
+  } catch (err) {
+    console.log(err);
+  } finally {
+    isLoadingState.value = false;
+  }
+};
+getCommCode();
+// 닉네임 중복 검사
 const duplicateEmailCheck = async () => {
   if (!form.value.nickname)
     return baseNotify('닉네임을 입력해주세요.', { type: 'warning' });
 
   isLoadingState.value = true;
+
   try {
     const res = await api.post('/user/duplicatedEmailCheck', form.value);
-    console.log(res);
     if (res.data) {
       return baseNotify('중복된 닉네임이 존재합니다');
     } else {
@@ -202,13 +229,12 @@ const duplicateEmailCheck = async () => {
     isLoadingState.value = false;
   }
 };
-
+// 회원가입 요청
 const signUpUser = async () => {
   if (!form.value.isNicknameCheck)
     return baseNotify('닉네임 중복검사를 진행해주세요.');
 
   form.value.tel = `${form.value.firstTel}-${form.value.otherTel}`;
-
   isLoadingState.value = true;
 
   try {
