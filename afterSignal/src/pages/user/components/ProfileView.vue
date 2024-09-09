@@ -6,9 +6,9 @@
           <small class="block q-mb-sm">E-mail</small>
           <q-input
             v-model="form.email"
+            class="bg-grey-3"
             dense
             outlined
-            color="yellow-4"
             maxlength="50"
             readonly
           />
@@ -16,7 +16,14 @@
         <!-- 이름 -->
         <q-card-section class="q-pb-none">
           <small class="block q-mb-sm">Name</small>
-          <q-input v-model="form.name" dense outlined maxlength="5" readonly />
+          <q-input
+            v-model="form.name"
+            class="bg-grey-3"
+            dense
+            outlined
+            maxlength="5"
+            readonly
+          />
         </q-card-section>
         <q-card-section class="q-pb-none">
           <small class="block q-mb-sm">* Gender</small>
@@ -92,6 +99,7 @@
             />
           </div>
         </q-card-section>
+        <!-- 도시, 지역구 -->
         <q-card-section class="q-pb-none">
           <div class="row q-col-gutter-sm">
             <div class="col-6">
@@ -99,6 +107,7 @@
               <q-select
                 v-model="form.city"
                 :options="options.city"
+                @update:model-value="changeDistrictByOptions"
                 color="red-3"
                 dense
                 outlined
@@ -124,7 +133,7 @@
         </q-card-section>
       </q-form>
     </q-card-section>
-
+    <!-- 프로필 이미지 -->
     <q-card-section class="col-12 col-md-4 q-pl-none q-pb-xl">
       <div class="full-height flex justify-center items-center">
         <q-btn :ripple="false" flat>
@@ -167,7 +176,6 @@
         accept=".jpg,.jpeg,.png"
       />
     </q-card-section>
-    {{ options }}
   </q-card>
 </template>
 
@@ -195,27 +203,21 @@ const form = ref({
   nickname: 'munstarrrr',
   tel: '',
   firstTel: '010',
-  otherTel: '',
+  otherTel: '8637-1685',
   city: 'COM0000007',
   district: 'COM0000025',
   profileImage: '' || '/src/assets/common/profile_default.png',
 });
 
-// 공통코드 받아오기
+// 공통코드 조회
 const getCommCode = async () => {
   isLoadingState.value = true;
 
   try {
     const { data } = await api.post('/user/signUp');
     const result = data.result;
-    options.value = { ...result };
-    const key = form.value.district;
-    console.log(key);
-    console.log(options.value[key]);
-
-    // const city = data.result.city;
-    // options.value.city = city;
-    // form.value.city = city[0].value;
+    const key = form.value.city;
+    options.value = { ...result, district: [...result[key]] };
   } catch (err) {
     console.log(err);
   } finally {
@@ -223,6 +225,12 @@ const getCommCode = async () => {
   }
 };
 getCommCode();
+
+// 도시 셀렉트 태그 변경 시 지역구 데이터 변경
+const changeDistrictByOptions = (val) => {
+  form.value.district = options.value[val][0].value;
+  options.value.district = options.value[val];
+};
 
 // file input 참초 객체
 const fileInput = ref(null);

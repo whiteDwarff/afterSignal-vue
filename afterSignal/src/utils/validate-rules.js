@@ -10,6 +10,12 @@ const validateEmail = (val) => {
     /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
   return reg.test(val) || '이메일 형식이 아닙니다';
 };
+
+const validateEmailBool = (val) => {
+  const reg =
+    /^(?=[a-zA-Z0-9@._%+-]{6,254}$)[a-zA-Z0-9._%+-]{1,64}@(?:[a-zA-Z0-9-]{1,63}\.){1,8}[a-zA-Z]{2,63}$/;
+  return reg.test(val) || false;
+};
 /**
  * @param { string } tel 휴대폰 번호
  * @returns { boolean } 휴대폰 번호가 유효성 검사를 통과하면 true 반환
@@ -57,4 +63,5 @@ export {
   validateTel,
   validatePasswordConfirm,
   inputEmptyCheck,
+  validateEmailBool,
 };

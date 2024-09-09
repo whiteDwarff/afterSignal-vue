@@ -7,16 +7,30 @@
       <!-- 이메일 -->
       <q-card-section class="q-pb-none">
         <small class="block q-mb-sm">* E-mail</small>
-        <q-input
-          v-model="form.email"
-          dense
-          outlined
-          color="red-3"
-          maxlength="50"
-          :rules="[validateEmail]"
-          lazy-rules
-          hide-bottom-space
-        />
+        <div class="row q-col-gutter-x-sm">
+          <q-input
+            v-model="form.email"
+            dense
+            outlined
+            color="red-3"
+            maxlength="50"
+            class="col-9"
+            :rules="[validateEmail]"
+            lazy-rules
+            hide-bottom-space
+            :readonly="form.isEmailCheck"
+          />
+          <div class="col-3">
+            <q-btn
+              @click="duplicateInfoCheck('email')"
+              class="full-width bg-deep-purple-3 text-white border"
+              flat
+              label="check"
+              style="height: 40px"
+              :disable="form.isEmailCheck"
+            />
+          </div>
+        </div>
       </q-card-section>
       <!-- 비밀번호 -->
       <q-card-section class="q-pb-none">
@@ -74,7 +88,7 @@
           />
           <div class="col-3">
             <q-btn
-              @click="duplicateEmailCheck"
+              @click="duplicateInfoCheck('nickname')"
               class="full-width bg-deep-purple-3 text-white border"
               flat
               label="check"
@@ -160,6 +174,7 @@
 <script setup>
 import {
   validateEmail,
+  validateEmailBool,
   validatePassword,
   validatePasswordConfirm,
   validateTel,
@@ -187,12 +202,13 @@ const form = ref({
   firstTel: '010',
   otherTel: '',
   tel: '',
-  isNicknameCheck: false,
+  isEmailCheck: false, // 이메일 중복체크 여부
+  isNicknameCheck: false, // 닉네임 중복체크 여부
 });
 // select options
 const options = ref({});
 
-// 공통코드 받아오기
+// 공통코드 조회
 const getCommCode = async () => {
   isLoadingState.value = true;
 
@@ -207,21 +223,27 @@ const getCommCode = async () => {
   }
 };
 getCommCode();
-// 닉네임 중복 검사
-const duplicateEmailCheck = async () => {
-  if (!form.value.nickname)
+
+// 이메일, 닉네임 중복 검사
+const duplicateInfoCheck = async (flg) => {
+  const str = flg == 'email' ? '이메일' : '닉네임';
+
+  if (flg == 'email' && !validateEmailBool(form.value.email))
+    return baseNotify('이메일 형식이 아닙니다.', { type: 'warning' });
+  if (flg == 'nickname' && !form.value.nickname)
     return baseNotify('닉네임을 입력해주세요.', { type: 'warning' });
 
   isLoadingState.value = true;
 
   try {
-    const res = await api.post('/user/duplicatedEmailCheck', form.value);
-    if (res.data) {
-      return baseNotify('중복된 닉네임이 존재합니다');
-    } else {
-      if (confirm('해당 닉네임을 사용하시겠습니까?')) {
-        form.value.isNicknameCheck = true;
-      }
+    const { data } = await api.post('/user/duplicatedInfoCheck', {
+      ...form.value,
+      flg,
+    });
+    if (data.result.count > 0) return baseNotify(`중복된 ${str}이 존재합니다`);
+    else if (confirm(`해당 ${str}을 사용하시겠습니까?`)) {
+      if (flg == 'email') form.value.isEmailCheck = true;
+      else form.value.isNicknameCheck = true;
     }
   } catch (err) {
     console.log(err);
@@ -231,6 +253,9 @@ const duplicateEmailCheck = async () => {
 };
 // 회원가입 요청
 const signUpUser = async () => {
+  if (!form.value.isEmailCheck)
+    return baseNotify('이메일 중복검사를 진행해주세요.');
+
   if (!form.value.isNicknameCheck)
     return baseNotify('닉네임 중복검사를 진행해주세요.');
 
