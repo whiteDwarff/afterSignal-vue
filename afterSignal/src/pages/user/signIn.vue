@@ -3,7 +3,7 @@
     <div class="text-center q-mb-lg">
       <span class="text-h4">Sign In</span>
     </div>
-    <q-form @submit.prevent>
+    <q-form @submit.prevent="signIn">
       <!-- 이메일 -->
       <q-card-section class="q-pb-none">
         <small class="block q-mb-sm">* E-mail</small>
@@ -83,6 +83,16 @@
 <script setup>
 import { validateEmail, validatePassword } from '/src/utils/validate-rules';
 
+import { useSystemStore } from 'src/stores/systemStore';
+import { useServiceUserStore } from 'src/stores/serviceUserStore';
+import { storeToRefs } from 'pinia';
+
+const systemStore = useSystemStore();
+const serviceUserStore = useServiceUserStore();
+const { isLoadingState } = storeToRefs(systemStore);
+
+const router = useRouter();
+
 const passwordType = ref(false);
 
 const form = ref({
@@ -90,6 +100,24 @@ const form = ref({
   password: '',
   isLoginInfoSaved: false,
 });
+
+const signIn = async () => {
+  try {
+    const { data } = await api.post('/user/signInUser', form.value);
+    console.log(data);
+    if (data.status == 200) {
+      serviceUserStore.setUser(data.result.user);
+      baseNotify(`${data.result.user.name}님 환영합니다 😃`);
+      router.push('/');
+    } else {
+      baseNotify('로그인 실패하였습니다.', { type: 'warning' });
+    }
+  } catch (err) {
+    console.log(err);
+  } finally {
+    isLoadingState.value = false;
+  }
+};
 </script>
 
 <style scoped>

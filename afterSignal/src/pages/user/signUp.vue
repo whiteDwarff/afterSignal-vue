@@ -214,6 +214,7 @@ const getCommCode = async () => {
 
   try {
     const { data } = await api.post('/user/signUp');
+    console.log(data);
     options.value = { ...data.result };
     form.value.city = data.result.city[0].value;
   } catch (err) {

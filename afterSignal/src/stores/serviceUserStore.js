@@ -1,14 +1,16 @@
 import { defineStore } from 'pinia';
 import { useLocalStorage, StorageSerializers } from '@vueuse/core'; // vueuse
 import { useRouter } from 'vue-router';
+import { baseNotify } from 'src/utils/base-notify';
 
-export const useAuthStore = defineStore('auth', () => {
+export const useServiceUserStore = defineStore('serviceUser', () => {
   // 로그인 상태를 담는 객체 login: true, logout : false
   const isAuthState = computed(() => !!user.value.seq);
+  // 사용자의 seq를 반환
+  const getUserSeq = computed(() => user.value.seq);
 
   const router = useRouter();
 
-  const getUserSeq = computed(() => user.value.seq);
   /**
    * @vueuse
    * @doc :https://vueuse.org/
@@ -18,47 +20,42 @@ export const useAuthStore = defineStore('auth', () => {
    * - useLocalStorage( key, defaultValue, options )
    * - serializer: StorageSerializers.object : Object -> String Type으로 형변환 ( 반응형 ref 객체 )
    */
-  const user = useLocalStorage(
+  const serviceUser = useLocalStorage(
     // LocalStorage에 저장될 key
-    'auth/user',
+    'service/user',
     // Default Value
     {
       seq: null,
-      idntfCd: 'ROLE_ANONYMOUS',
+      grade: 'COM0000001',
     },
     {
       serializer: StorageSerializers.object,
     },
   );
 
+  // 서비스 사용자 정보 셋팅
   const setUser = (data = null) => {
-    console.log(data);
     if (data) {
-      user.value = { ...data };
-      delete user.value.status;
+      serviceUser.value = { ...data };
     } else {
-      user.value = {
+      serviceUser.value = {
         seq: null,
-        idntfCd: 'ROLE_ANONYMOUS',
+        grade: 'COM0000001',
       };
     }
   };
+  // 서비스 사용자 로그아웃
   const logout = () => {
-    baseNotify(
-      '로그아웃 하시겠습니까?',
-      null,
-      () => {
-        setUser();
-        router.push('/');
-        baseNotify('로그아웃 되었습니다.');
-      },
-      true,
-    );
+    if (!confirm('로그아웃 하시겠습니까?')) return;
+
+    setUser();
+    baseNotify('로그아웃 되었습니다.');
+    router.push('/');
   };
   return {
     isAuthState,
     getUserSeq,
-    user,
+    serviceUser,
     setUser,
     logout,
   };
