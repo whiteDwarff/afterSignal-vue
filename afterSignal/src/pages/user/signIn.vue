@@ -101,19 +101,22 @@ const form = ref({
   isLoginInfoSaved: false,
 });
 
+// 로그인
 const signIn = async () => {
+  isLoadingState.value = true;
   try {
     const { data } = await api.post('/user/signInUser', form.value);
-    console.log(data);
     if (data.status == 200) {
       serviceUserStore.setUser(data.result.user);
       baseNotify(`${data.result.user.name}님 환영합니다 😃`);
       router.push('/');
     } else {
+      console.log(data);
       baseNotify('로그인 실패하였습니다.', { type: 'warning' });
     }
   } catch (err) {
     console.log(err);
+    alert(err);
   } finally {
     isLoadingState.value = false;
   }

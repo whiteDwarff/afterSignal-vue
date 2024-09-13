@@ -120,6 +120,7 @@ module.exports = configure(function (/* ctx */) {
             ],
             dirs: [
               'src/service/**',
+              'src/stores/**',
               'src/utils/**',
               'src/boot/**',
               'src/options/**',
@@ -137,6 +138,7 @@ module.exports = configure(function (/* ctx */) {
             dirs: [
               'src/components/**',
               'src/components/**/**',
+              'src/components/**/**/**',
               'src/pages/**',
               'src/pages/**/**',
             ],

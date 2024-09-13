@@ -78,5 +78,6 @@ const userViewComponents = {
 <route lang="yaml">
 meta:
   width: '1100px'
-#  requiresAuth: true
+  requiresAuth: true
+  guard: service
 </route>

@@ -5,9 +5,9 @@ import { baseNotify } from 'src/utils/base-notify';
 
 export const useServiceUserStore = defineStore('serviceUser', () => {
   // 로그인 상태를 담는 객체 login: true, logout : false
-  const isAuthState = computed(() => !!user.value.seq);
+  const isAuthState = computed(() => !!serviceUser.value.seq);
   // 사용자의 seq를 반환
-  const getUserSeq = computed(() => user.value.seq);
+  const getUserSeq = computed(() => serviceUser.value.seq);
 
   const router = useRouter();
 
