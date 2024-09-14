@@ -112,7 +112,7 @@ const signIn = async () => {
       router.push('/');
     } else {
       console.log(data);
-      baseNotify('로그인 실패하였습니다.', { type: 'warning' });
+      baseNotify(data.result.msg, { type: 'warning' });
     }
   } catch (err) {
     console.log(err);

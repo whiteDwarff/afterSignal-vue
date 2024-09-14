@@ -229,8 +229,9 @@ const form = ref({
   gender: serviceUser.value?.gender || 'M', // gender 값이 없을 경우 기본 값
   orgNickname: serviceUser.value.nickname, // 기존에 사용중인 닉네임
   isNicknameCheck: false, // 닉네임 변경 체크할 상태변수
-  changedProfileImage: null,
 });
+
+const changedProfileImage = ref(null);
 
 // 공통코드 조회
 const getCommCode = async () => {
@@ -286,6 +287,7 @@ const reset = () => {
 };
 // 회원정보 수정
 const submit = async () => {
+  console.log(changedProfileImage.value);
   if (
     form.value.nickname != form.value.orgNickname &&
     !form.value.isNicknameCheck
@@ -297,22 +299,20 @@ const submit = async () => {
   // 전화번호
   form.value.tel = `${form.value.firstTel}-${form.value.otherTel}`;
 
-  // FormData
+  // FormData에 form key, value 추가
   const formData = new FormData();
   for (let key of Object.keys(form.value)) {
     formData.append(key, form.value[key]);
   }
 
-  
+  formData.append('dir', 'profile');
+  formData.append('image', changedProfileImage.value);
 
   isLoadingState.value = true;
 
   try {
-    const { data } = await api.post('/user/updateInfo', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    let headers = { headers: { 'Content-Type': 'multipart/form-data' } };
+    const { data } = await api.post('/user/updateInfo', formData, headers);
     console.log(data);
   } catch (err) {
     console.log(err);
@@ -328,7 +328,7 @@ const setUserThumbnail = (event) => {
   const files = event.target?.files;
   if (files.length > 0) {
     const file = files[0];
-    form.value.changedProfileImage = file;
+    changedProfileImage.value = file;
 
     const extArr = process.env.PROFILE_EXT.split(',');
     if (fileExtCheck(file, extArr)) {
