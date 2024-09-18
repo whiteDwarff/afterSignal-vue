@@ -1,8 +1,14 @@
 import { boot } from 'quasar/wrappers';
 import { VueReCaptcha } from 'vue-recaptcha-v3';
+import { useSystemStore } from 'src/stores/systemStore';
+import { storeToRefs } from 'pinia';
+
 import axios from 'axios';
 
 const api = axios.create({ baseURL: '/api' });
+// loading 상태 전역 등록
+const systemStore = useSystemStore();
+const { isLoadingState } = storeToRefs(systemStore);
 
 export default boot(({ app }) => {
   // axios
@@ -21,4 +27,4 @@ export default boot(({ app }) => {
   };
 });
 
-export { axios, api };
+export { axios, api, isLoadingState };

@@ -37,6 +37,10 @@ export const useServiceUserStore = defineStore('serviceUser', () => {
   const setUser = (data = null) => {
     if (data) {
       serviceUser.value = { ...data };
+      if (!data.profileImage) {
+        serviceUser.value.profileImage =
+          '/src/assets/common/profile_default.png';
+      }
     } else {
       serviceUser.value = {
         seq: null,

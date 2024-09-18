@@ -66,11 +66,15 @@
 </template>
 
 <script setup>
+import { baseNotify } from 'src/utils/base-notify';
 import {
   validatePassword,
   validatePasswordConfirm,
   inputEmptyCheck,
 } from '/src/utils/validate-rules';
+
+const userStore = useServiceUserStore();
+const { serviceUser } = storeToRefs(userStore);
 
 const form = ref({
   password: '',
@@ -80,9 +84,39 @@ const form = ref({
 
 const passwordType = ref(false);
 
-const updatePassword = () => {
+// 비밀번호 변경
+const updatePassword = async () => {
   if (form.value.password == form.value.newPassword) {
-    return baseNotify('1111', { type: 'warning' });
+    return baseNotify('동일한 패스워드로 변경할 수 없습니다.', {
+      type: 'warning',
+    });
+  }
+  if (form.value.newPassword != form.value.confirmPassword) {
+    return baseNotify('비밀번호가 일치하지 않습니다.', {
+      type: 'warning',
+    });
+  }
+
+  isLoadingState.value = true;
+
+  try {
+    const { data } = await api.post('/user/updatePassword', {
+      ...form.value,
+      seq: serviceUser.value.seq,
+      email: serviceUser.value.email,
+    });
+    if (data.status == 200) {
+      form.value.password = '';
+      form.value.newPassword = '';
+      form.value.confirmPassword = '';
+      baseNotify('비밀번호가 변경되었습니다.');
+    } else {
+      baseNotify(data.result.msg, { type: 'warning' });
+    }
+  } catch (err) {
+    console.log(err);
+  } finally {
+    isLoadingState.value = false;
   }
 };
 </script>

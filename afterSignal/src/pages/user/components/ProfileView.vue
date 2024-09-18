@@ -204,6 +204,7 @@
 <script setup>
 import { firstTelOptions } from 'src/options/common';
 import { inputEmptyCheck, validateTel } from '/src/utils/validate-rules';
+import { computed } from 'vue';
 
 // store ---------------------------
 const systemStore = useSystemStore();
