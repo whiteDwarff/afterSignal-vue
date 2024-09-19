@@ -19,7 +19,6 @@ function requiresAuth(to) {
 }
 
 export default boot(async ({ app, router }) => {
-  console.log(router);
   router.beforeEach(requiresAuth);
 });
 

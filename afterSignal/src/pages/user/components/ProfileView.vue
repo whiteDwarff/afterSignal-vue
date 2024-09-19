@@ -1,7 +1,7 @@
 <template>
   <q-card flat class="border no-border-radius">
     <q-form @submit.prevent="submit" class="full-width row">
-      <q-card-section class="col-12 col-md-8 q-pr-none">
+      <q-card-section class="col-12 col-md-8">
         <q-card-section class="q-py-none">
           <small class="block q-mb-sm">E-mail</small>
           <q-input
@@ -149,7 +149,8 @@
         </q-card-section>
       </q-card-section>
       <!-- 프로필 이미지 -->
-      <q-card-section class="col-12 col-md-4 q-pl-none q-pb-xl">
+      <q-card-section class="col-12 col-md-4">
+        <!-- <div class="full-height flex justify-center items-center"> -->
         <div class="full-height flex justify-center items-center">
           <q-btn :ripple="false" flat>
             <q-avatar size="200px" class="cursor-pointer shadow-5">
@@ -185,8 +186,16 @@
               </q-list>
             </q-menu>
           </q-btn>
+
+          <q-btn
+            unelevated
+            class="full-width bg-black text-white border q-mt-auto"
+            type="submit"
+            label="SUBMIT"
+          />
         </div>
 
+        <!-- hidden input -->
         <input
           type="file"
           ref="fileInput"
@@ -195,7 +204,6 @@
           @change="setUserThumbnail"
           accept=".jpg,.jpeg,.png"
         />
-        <q-btn type="submit" label="SUBMIT" />
       </q-card-section>
     </q-form>
   </q-card>
@@ -204,7 +212,6 @@
 <script setup>
 import { firstTelOptions } from 'src/options/common';
 import { inputEmptyCheck, validateTel } from '/src/utils/validate-rules';
-import { computed } from 'vue';
 
 // store ---------------------------
 const systemStore = useSystemStore();
@@ -288,7 +295,6 @@ const reset = () => {
 };
 // 회원정보 수정
 const submit = async () => {
-  console.log(changedProfileImage.value);
   if (
     form.value.nickname != form.value.orgNickname &&
     !form.value.isNicknameCheck
@@ -312,11 +318,18 @@ const submit = async () => {
   isLoadingState.value = true;
 
   try {
-    let headers = { headers: { 'Content-Type': 'multipart/form-data' } };
-    const { data } = await api.post('/user/updateInfo', formData, headers);
-    console.log(data);
+    const { data } = await api.post('/user/updateInfo', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    if (data.status == 200) {
+      baseNotify('프로필이 변경되었습니다.');
+      serviceUserStore.setUser(data.result.user);
+    } else {
+      baseNotify('프로필이 변경에 실패하였습니다.', { type: 'warning' });
+    }
   } catch (err) {
     console.log(err);
+    baseNotify('프로필 변경 error', { type: 'warning' });
   } finally {
     isLoadingState.value = false;
   }
@@ -333,7 +346,7 @@ const setUserThumbnail = (event) => {
 
     const extArr = process.env.PROFILE_EXT.split(',');
     if (fileExtCheck(file, extArr)) {
-      return baseNotify(`${extArr.join(', ')}확장자만 등록 가능합니다.`, {
+      return baseNotify(`${extArr.join(', ')} 확장자만 등록 가능합니다.`, {
         type: 'warning',
       });
     }
@@ -343,7 +356,6 @@ const setUserThumbnail = (event) => {
     reader.onload = (e) => {
       form.value.profileImage = e.target.result;
     };
-
     reader.readAsDataURL(file);
   }
 };

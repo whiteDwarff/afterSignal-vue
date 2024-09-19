@@ -40,6 +40,9 @@ export const useServiceUserStore = defineStore('serviceUser', () => {
       if (!data.profileImage) {
         serviceUser.value.profileImage =
           '/src/assets/common/profile_default.png';
+      } else {
+        serviceUser.value.profileImage =
+          process.env.SERVER_PORT + data.profileImage;
       }
     } else {
       serviceUser.value = {
