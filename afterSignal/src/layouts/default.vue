@@ -22,10 +22,21 @@
 </template>
 
 <script setup>
+import { useCookies } from '@vueuse/integrations/useCookies';
+
 const systemStore = useSystemStore();
+const userService = useServiceUserStore();
 const { isLoadingState } = storeToRefs(systemStore);
 
 const route = useRoute();
+
+const cookie = useCookies();
+const userStoredCookie = cookie.get('serviceUser');
+
+// 쿠키에 저장된 사용자 정보가 있다면 로그인 상태로 변경
+if (userStoredCookie) {
+  userService.setUser(userStoredCookie);
+}
 
 const pageContainerStyles = computed(() => ({
   maxWidth: route.meta?.width || '1310px',

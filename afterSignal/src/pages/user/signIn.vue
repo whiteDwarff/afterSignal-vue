@@ -86,6 +86,7 @@ import { validateEmail, validatePassword } from '/src/utils/validate-rules';
 import { useSystemStore } from 'src/stores/systemStore';
 import { useServiceUserStore } from 'src/stores/serviceUserStore';
 import { storeToRefs } from 'pinia';
+import { setCookies } from 'src/utils/common';
 
 const systemStore = useSystemStore();
 const serviceUserStore = useServiceUserStore();
@@ -107,6 +108,10 @@ const signIn = async () => {
   try {
     const { data } = await api.post('/user/signInUser', form.value);
     if (data.status == 200) {
+      // 쿠키에 로그인 정보 저장
+      if (form.value.isLoginInfoSaved)
+        setCookies('serviceUser', data.result.user, '/');
+
       serviceUserStore.setUser(data.result.user);
       baseNotify(`${data.result.user.name}님 환영합니다 😃`);
       router.push('/');
