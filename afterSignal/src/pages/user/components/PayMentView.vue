@@ -14,7 +14,12 @@ import { useServiceUserStore } from 'src/stores/serviceUserStore';
 const userStore = useServiceUserStore();
 const { serviceUser } = storeToRefs(userStore);
 
-const route = useRoute();
+const props = defineProps({
+  viewMode: {
+    type: String,
+  },
+});
+
 // 페이지네이션
 const page = ref({
   current: 1,
@@ -27,7 +32,7 @@ const selectDepositList = async () => {
   isLoadingState.value = true;
   try {
     const { data } = await api.post('/user/depositList', {
-      view: route.query.view,
+      view: props.viewMode,
       ...page.value,
       ...serviceUser.value,
     });

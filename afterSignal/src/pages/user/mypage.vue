@@ -38,8 +38,8 @@ const router = useRouter();
 const view = ref([
   { name: 'Profile', value: 'profile' },
   { name: 'Password Update', value: 'password' },
-  { name: 'Payment History', value: 'payment' },
-  { name: 'Point History', value: 'point' },
+  { name: 'Payment History', value: 'amount' },
+  { name: 'Point History', value: 'deposit' },
 ]);
 
 // 새로고침 시 현제 페이지 유지하기
@@ -57,8 +57,8 @@ const userViewComponents = {
   password: defineAsyncComponent(() =>
     import('./components/PasswordUpdateView.vue'),
   ),
-  payment: defineAsyncComponent(() => import('./components/PayMentView.vue')),
-  point: defineAsyncComponent(() => import('./components/PayMentView.vue')),
+  amount: defineAsyncComponent(() => import('./components/PayMentView.vue')),
+  deposit: defineAsyncComponent(() => import('./components/PayMentView.vue')),
 };
 </script>
 

@@ -57,8 +57,7 @@
           type="submit"
           id="user-form-submit-btn"
           class="bg-red-2 text-white border"
-          unelevated
-          size="lg"
+          size="md"
         />
       </q-card-section>
     </q-form>
@@ -66,7 +65,6 @@
 </template>
 
 <script setup>
-import { baseNotify } from 'src/utils/base-notify';
 import {
   validatePassword,
   validatePasswordConfirm,

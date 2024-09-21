@@ -25,29 +25,6 @@
             readonly
           />
         </q-card-section>
-        <q-card-section class="q-pb-none">
-          <small class="block q-mb-sm">* Gender</small>
-          <div class="row q-col-gutter-sm">
-            <div class="col-6">
-              <q-btn
-                @click="form.gender = 'M'"
-                class="border full-width"
-                :class="{ 'bg-red-2 text-white': form.gender == 'M' }"
-                label="Male"
-                unelevated
-              />
-            </div>
-            <div class="col-6">
-              <q-btn
-                @click="form.gender = 'F'"
-                class="border full-width"
-                :class="{ 'bg-red-2 text-white': form.gender == 'F' }"
-                label="Female"
-                unelevated
-              />
-            </div>
-          </div>
-        </q-card-section>
         <!-- 닉네임 -->
         <q-card-section class="q-pb-none">
           <small class="block q-mb-sm">Nickname</small>
@@ -82,6 +59,29 @@
                 flat
                 label="check"
                 style="height: 40px"
+              />
+            </div>
+          </div>
+        </q-card-section>
+        <q-card-section class="q-pb-none">
+          <small class="block q-mb-sm">* Gender</small>
+          <div class="row q-col-gutter-sm">
+            <div class="col-6">
+              <q-btn
+                @click="form.gender = 'M'"
+                class="border full-width"
+                :class="{ 'bg-red-2 text-white': form.gender == 'M' }"
+                label="Male"
+                unelevated
+              />
+            </div>
+            <div class="col-6">
+              <q-btn
+                @click="form.gender = 'F'"
+                class="border full-width"
+                :class="{ 'bg-red-2 text-white': form.gender == 'F' }"
+                label="Female"
+                unelevated
               />
             </div>
           </div>
@@ -149,9 +149,12 @@
         </q-card-section>
       </q-card-section>
       <!-- 프로필 이미지 -->
-      <q-card-section class="col-12 col-md-4">
+      <q-card-section id="profile-col" class="col-12 col-md-4">
         <!-- <div class="full-height flex justify-center items-center"> -->
-        <div class="full-height flex justify-center items-center">
+        <div
+          id="profile-box"
+          class="full-height flex justify-center items-center"
+        >
           <q-btn :ripple="false" flat>
             <q-avatar size="200px" class="cursor-pointer shadow-5">
               <img :src="form.profileImage" alt="user profile" />
@@ -188,8 +191,8 @@
           </q-btn>
 
           <q-btn
-            unelevated
-            class="full-width bg-black text-white border q-mt-auto"
+            class="full-width bg-blue-grey-2 text-white q-mt-auto border"
+            id="submit-btn"
             type="submit"
             label="SUBMIT"
           />
@@ -268,6 +271,8 @@ const changeDistrictByOptions = (val) => {
 };
 // 닉네임 중복체크
 const duplicateInfoCheck = async () => {
+  // 현재 사용자의 닉네임과 동일하다면 진행x
+  if (serviceUser.value.nickname == form.value.nickname) return;
   if (!form.value.nickname)
     return baseNotify('닉네임을 입력해주세요.', { type: 'warning' });
 
@@ -361,4 +366,16 @@ const setUserThumbnail = (event) => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+@media screen and (max-width: 1024px) {
+  #profile-box {
+    display: block;
+    text-align: center;
+  }
+  #submit-btn {
+    display: block;
+    margin: 30px auto 0 auto !important;
+    width: 50% !important;
+  }
+}
+</style>

@@ -1,70 +1,72 @@
 <template>
-  <table class="full-width">
-    <colgroup>
-      <col style="width: 27%" />
-      <col style="width: 15%" />
-      <col style="width: 15%" />
-      <col style="width: 15%" />
-      <col style="width: 14%" />
-      <col style="width: 14%" />
-    </colgroup>
-    <thead>
-      <tr class="bg-red-2 text-white shadow-2">
-        <th class="text-weight-bold border-left">변경내역</th>
-        <th class="text-weight-bold border-y">변경 전</th>
-        <th class="text-weight-bold border-y">변경 금액</th>
-        <th class="text-weight-bold border-y">잔액</th>
-        <th class="text-weight-bold border-y">상태</th>
-        <th class="text-weight-bold border-right">변경일자</th>
-      </tr>
-    </thead>
-    <tbody>
-      <template v-if="list.length">
-        <tr
-          v-for="item of list"
-          :key="item"
-          class="text-center bg-white text-black"
-        >
-          <td class="border-left">{{ item.changeReason }}</td>
-          <td class="border-y">{{ localeToMoney(item.beforeDeposit) }}</td>
-          <td class="border-y">
-            <div class="flex items-center justify-center">
-              <q-icon
-                :name="
-                  item.beforeDeposit > item.afterDeposit
-                    ? 'sym_o_arrow_drop_down'
-                    : 'sym_o_arrow_drop_up'
-                "
-                :color="item.beforeDeposit > item.afterDeposit ? 'red' : 'teal'"
-                size="xs"
-              />
-              {{ localeToMoney(item.afterDeposit - item.beforeDeposit) }}
-            </div>
-          </td>
-          <td class="border-y text-weight-medium">
-            {{ localeToMoney(item.afterDeposit) }}
-          </td>
-          <td class="border-y">
-            <q-chip color="cyan-3" text-color="white" :ripple="false">
-              {{ item.status }}
-            </q-chip>
-          </td>
-          <td class="border-right">{{ item.usageDate }}</td>
+  <div style="min-height: 500px">
+    <table class="full-width">
+      <colgroup>
+        <col style="width: 27%" />
+        <col style="width: 15%" />
+        <col style="width: 15%" />
+        <col style="width: 15%" />
+        <col style="width: 14%" />
+        <col style="width: 14%" />
+      </colgroup>
+      <thead>
+        <tr class="bg-red-2 text-white shadow-2">
+          <th class="text-weight-bold border-left">변경내역</th>
+          <th class="text-weight-bold border-y">변경 전</th>
+          <th class="text-weight-bold border-y">변경금액</th>
+          <th class="text-weight-bold border-y">잔액</th>
+          <th class="text-weight-bold border-y">상태</th>
+          <th class="text-weight-bold border-right">변경일자</th>
         </tr>
-      </template>
-      <template v-else>
-        <tr class="text-center bg-white text-black">
-          <td class="border" colspan="6">Empty of List.</td>
-        </tr>
-      </template>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <template v-if="list.length">
+          <tr
+            v-for="item of list"
+            :key="item"
+            class="text-center bg-white text-black"
+          >
+            <td class="border-left">{{ item.changeReason }}</td>
+            <td class="border-y">{{ localeToMoney(item.before) }}</td>
+            <td class="border-y">
+              <div class="flex items-center justify-center">
+                <q-icon
+                  :name="
+                    item.before > item.after
+                      ? 'sym_o_arrow_drop_down'
+                      : 'sym_o_arrow_drop_up'
+                  "
+                  :color="item.before > item.after ? 'red' : 'teal'"
+                  size="xs"
+                />
+                {{ localeToMoney(item.after - item.before) }}
+              </div>
+            </td>
+            <td class="border-y text-weight-medium">
+              {{ localeToMoney(item.after) }}
+            </td>
+            <td class="border-y">
+              <q-chip color="cyan-3" text-color="white" :ripple="false">
+                {{ item.statusNm }}
+              </q-chip>
+            </td>
+            <td class="border-right">{{ item.usageDate }}</td>
+          </tr>
+        </template>
+        <template v-else>
+          <tr class="text-center bg-white text-black">
+            <td class="border" style="border-radius: 10px" colspan="6">
+              Empty of List.
+            </td>
+          </tr>
+        </template>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup>
 import { localeToMoney } from 'src/utils/common';
-
-const route = useRoute();
 
 const props = defineProps({
   list: {
