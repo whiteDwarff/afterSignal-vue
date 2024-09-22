@@ -13,7 +13,7 @@
           outlined
           color="red-3"
           maxlength="5"
-          :rules="[(val) => inputEmptyCheck(val, '이름')]"
+          :rules="[(val) => inputEmptyCheck(val, '이름을')]"
           lazy-rules
           hide-bottom-space
         />
@@ -42,7 +42,7 @@
             mask="####-####"
             minlength="8"
             maxlength="9"
-            :rules="[(val) => validateTel(form.firstTel + val)]"
+            :rules="[(val) => validateTel(form)]"
             lazy-rules
             hide-bottom-space
           />
@@ -55,39 +55,85 @@
           label="SUBMIT"
           type="submit"
           class="border bg-red-2 text-white"
-          unelevated
-          size="lg"
+          size="md"
         />
       </q-card-section>
     </q-form>
+    <!-- Dialog -->
+    <BaseDialog v-model="isDialog" label="Forgot E-mail">
+      <div class="text-center">
+        <div class="q-mt-md">
+          <table class="full-width" style="border-collapse: collapse">
+            <tbody>
+              <tr>
+                <td class="border q-py-sm">
+                  {{ form.name }}님의 이메일 입니다.
+                </td>
+              </tr>
+              <tr>
+                <td class="border q-py-md">
+                  <template v-if="!form.isMasked">
+                    <span class="text-subtitle2 underline-hover">
+                      {{ form.maskedEmail }}
+                    </span>
+                    <q-btn
+                      @click="form.isMasked = true"
+                      class="q-ml-md bg-teal-2 text-white border"
+                      dense
+                      unelevated
+                      label="마스크 제거"
+                    />
+                  </template>
+                  <template v-else>
+                    <span class="text-subtitle2 underline-hover">
+                      {{ form.email }}
+                    </span>
+                  </template>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <q-btn
+          @click="$router.push('/user/signIn')"
+          class="full-width q-mt-lg border bg-deep-purple-3 text-white"
+          label="LOGIN"
+        />
+      </div>
+    </BaseDialog>
   </q-card>
 </template>
 
 <script setup>
-import { storeToRefs } from 'pinia';
-import { useSystemStore } from 'src/stores/systemStore';
 import { inputEmptyCheck, validateTel } from '/src/utils/validate-rules';
 import { firstTelOptions as options } from 'src/options/common';
 
-const systemStore = useSystemStore();
-const { isLoadingState } = storeToRefs(systemStore);
+const isDialog = ref(false);
 
 const form = ref({
   name: '',
   firstTel: '010',
   otherTel: '',
   tel: '',
+  isMasked: false,
 });
 
 const findUserEmail = async () => {
-  form.value.tel = form.value.firstTel + form.value.otherTel;
-  isLoadingState.value = !isLoadingState.value;
+  form.value.tel = `${form.value.firstTel}-${form.value.otherTel}`;
+  isLoadingState.value = true;
   try {
-    isLoadingState.value = false;
-    const res = await api.post('/user/findUserEmail', form.value);
-    console.log(res);
+    const { data } = await api.post('/user/findUserEmail', form.value);
+
+    if (data.status == 200) {
+      isDialog.value = true;
+      form.value = { ...form.value, ...data.result.info };
+    } else {
+      baseNotify(data.message);
+    }
   } catch (err) {
     console.log(err);
+  } finally {
+    isLoadingState.value = false;
   }
 };
 </script>

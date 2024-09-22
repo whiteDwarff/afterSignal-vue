@@ -48,8 +48,7 @@
           type="submit"
           id="user-form-submit-btn"
           class="bg-red-2 text-white border"
-          unelevated
-          size="lg"
+          size="md"
         />
       </q-card-section>
 
@@ -93,6 +92,7 @@ const serviceUserStore = useServiceUserStore();
 const { isLoadingState } = storeToRefs(systemStore);
 
 const router = useRouter();
+const route = useRoute();
 
 const passwordType = ref(false);
 
@@ -114,7 +114,9 @@ const signIn = async () => {
 
       serviceUserStore.setUser(data.result.user);
       baseNotify(`${data.result.user.name}님 환영합니다 😃`);
-      router.push('/');
+      // 라우터네비게이션가드를 통해 로그인 페이지로 왔다면 직전 페이지로 이동
+      const redirectionPath = route.redirectedFrom?.fullPath || '/';
+      router.push(redirectionPath);
     } else {
       console.log(data);
       baseNotify(data.result.msg, { type: 'warning' });
@@ -128,13 +130,4 @@ const signIn = async () => {
 };
 </script>
 
-<style scoped>
-.underline-hover {
-  transition: 0.4s ease 0s;
-}
-.underline-hover:hover {
-  text-decoration: underline;
-  text-decoration-color: #6d3f37;
-  text-underline-offset: 5px;
-}
-</style>
+<style scoped></style>

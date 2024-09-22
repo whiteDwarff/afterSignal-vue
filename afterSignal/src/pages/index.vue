@@ -1,5 +1,4 @@
 <template>
-  <!-- 페이지 단위의 root element :  q-page -->
   <div></div>
 </template>
 

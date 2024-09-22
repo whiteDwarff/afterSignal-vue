@@ -12,6 +12,8 @@ export const useServiceUserStore = defineStore('serviceUser', () => {
   // 사용자의 seq를 반환
   const getUserSeq = computed(() => serviceUser.value.seq);
 
+  const router = useRouter();
+
   /**
    * @doc   https://vueuse.org/core/useStorage/
    * @param {string} name - 스토리지에 저장될 이름
@@ -57,7 +59,7 @@ export const useServiceUserStore = defineStore('serviceUser', () => {
     // 저장된 쿠키가 있다면 삭제
     removeCookies('serviceUser');
     baseNotify('로그아웃 되었습니다.');
-    useRouter().push('/');
+    router.push('/');
   };
   return {
     isAuthState,

@@ -62,7 +62,7 @@
         >
       </div>
       <!-- 로그인 상태 -->
-      <div v-if="isAuthState">
+      <div v-else>
         <q-btn flat :ripple="false" dense>
           <q-avatar class="shadow-3">
             <img :src="serviceUser.profileImage" alt="profile image" />

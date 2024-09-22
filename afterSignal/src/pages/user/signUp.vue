@@ -7,19 +7,32 @@
       <!-- 이메일 -->
       <q-card-section class="q-pb-none">
         <small class="block q-mb-sm">* E-mail</small>
-        <div class="row q-col-gutter-x-sm">
+        <div class="row q-col-gutter-x-sm items-center">
           <q-input
             v-model="form.email"
             dense
             outlined
             color="red-3"
             maxlength="50"
-            class="col-9"
+            class="col-8"
+            :class="{ 'bg-grey-3': form.isEmailCheck }"
             :rules="[validateEmail]"
             lazy-rules
             hide-bottom-space
             :readonly="form.isEmailCheck"
           />
+          <div class="col-1 text-center">
+            <q-btn
+              @click="reset('email')"
+              :disable="!form.isEmailCheck"
+              flat
+              dense
+              rounded
+            >
+              <q-icon name="sym_o_restart_alt" color="grey-14"></q-icon>
+              <q-tooltip class="text-caption">reset</q-tooltip>
+            </q-btn>
+          </div>
           <div class="col-3">
             <q-btn
               @click="duplicateInfoCheck('email')"
@@ -73,10 +86,11 @@
       <!-- 닉네임 -->
       <q-card-section class="q-pb-none">
         <small class="block q-mb-sm">* Nickname</small>
-        <div class="row q-col-gutter-x-sm">
+        <div class="row q-col-gutter-x-sm items-center">
           <q-input
             v-model="form.nickname"
-            class="col-9"
+            class="col-8"
+            :class="{ 'bg-grey-3': form.isNicknameCheck }"
             dense
             outlined
             color="red-3"
@@ -86,10 +100,22 @@
             hide-bottom-space
             :readonly="form.isNicknameCheck"
           />
+          <div class="col-1 text-center">
+            <q-btn
+              @click="reset('nickname')"
+              :disable="!form.isNicknameCheck"
+              flat
+              dense
+              rounded
+            >
+              <q-icon name="sym_o_restart_alt" color="grey-14"></q-icon>
+              <q-tooltip class="text-caption">reset</q-tooltip>
+            </q-btn>
+          </div>
           <div class="col-3">
             <q-btn
               @click="duplicateInfoCheck('nickname')"
-              class="full-width bg-deep-purple-3 text-white border"
+              class="full-width bg-blue-grey-2 text-white border"
               flat
               label="check"
               style="height: 40px"
@@ -163,8 +189,7 @@
           label="SUBMIT"
           type="submit"
           class="border bg-red-2 text-white"
-          unelevated
-          size="lg"
+          size="md"
         />
       </q-card-section>
     </q-form>
@@ -208,13 +233,19 @@ const form = ref({
 // select options
 const options = ref({});
 
+// 이메일, 닉네임 중복검사 상태 리셋
+const reset = (flg) => {
+  return flg == 'email'
+    ? (form.value.isEmailCheck = false)
+    : (form.value.isNicknameCheck = false);
+};
+
 // 공통코드 조회
 const getCommCode = async () => {
   isLoadingState.value = true;
 
   try {
     const { data } = await api.post('/user/signUp');
-    console.log(data);
     options.value = { ...data.result };
     form.value.city = data.result.city[0].value;
   } catch (err) {
@@ -229,10 +260,8 @@ getCommCode();
 const duplicateInfoCheck = async (flg) => {
   const str = flg == 'email' ? '이메일' : '닉네임';
 
-  if (flg == 'email' && !validateEmailBool(form.value.email))
-    return baseNotify('이메일 형식이 아닙니다.', { type: 'warning' });
-  if (flg == 'nickname' && !form.value.nickname)
-    return baseNotify('닉네임을 입력해주세요.', { type: 'warning' });
+  if (flg == 'email' && !validateEmailBool(form.value.email)) return;
+  if (flg == 'nickname' && !form.value.nickname) return;
 
   isLoadingState.value = true;
 

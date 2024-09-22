@@ -6,16 +6,18 @@
     transition-hide="none"
     transition-show="none"
   >
-    <q-card style="min-width: 600px" :style="{ maxWidth: maxWidth }">
-      <q-card-section class="flex">
+    <q-card id="base-dialog" :style="{ width: maxWidth }">
+      <q-card-section class="flex q-py-sm">
         <q-space />
         <q-btn icon="close" flat dense round :ripple="false" v-close-popup />
       </q-card-section>
 
       <div class="text-center q-mb-lg">
-        <span class="text-h5 text-weight-bold">{{ label }}</span>
+        <span class="text-h6">{{ label }}</span>
       </div>
-      <slot> </slot>
+      <q-card-section>
+        <slot> </slot>
+      </q-card-section>
     </q-card>
   </q-dialog>
 </template>
@@ -28,10 +30,10 @@ const props = defineProps({
   },
   label: {
     type: String,
-    required: true,
+    default: () => '',
   },
 });
 const model = defineModel();
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>

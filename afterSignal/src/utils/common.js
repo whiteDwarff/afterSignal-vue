@@ -26,6 +26,15 @@ export const removeCookies = (cookieName) => {
 };
 
 /**
+ * 쿠키에 저장된 정보 조회
+ * @param {string} cookieName - 쿠키명
+ * @return {T || boolean}
+ */
+export const getCookies = (cookieName) => {
+  return useCookies().get(cookieName) || false;
+};
+
+/**
  * 문자열을 원화단위로 변환 후 반환
  * @param {string || number} value - 금액
  * @returns {string} 원화단위로 변경된 금액(세자리 콤마)
