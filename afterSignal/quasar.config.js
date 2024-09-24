@@ -73,7 +73,12 @@ module.exports = configure(function (/* ctx */) {
         SERVER_PORT: 'http://localhost:8080',
         IMAGE_EXT: '.jpg,.jpeg,.png,.gif',
         PROFILE_EXT: '.jpg,.jpeg,.png',
+        // Google Recaptcha Key
         RECAPTCHA_KEY: '6LciT7UpAAAAANSu16zb0AP7CIN_-ME28OrfhtkE',
+        // 포트원 상점 ID
+        IAMPORT_PAYMENT_KEY: 'imp70418550',
+        // 포트원 카카오 KEY
+        PAYMENT_KAKAO_KEY: 'kakaopay.TC0ONETIME',
       },
       // rawDefine: {}
       // ignorePublicFolder: true,

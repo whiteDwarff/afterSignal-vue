@@ -61,7 +61,7 @@
               to="/user/findEmail"
               class="text-grey-9 underline-hover"
             >
-              FORGOT E-mail
+              FORGOT E-MAIL
             </router-link>
             &nbsp;/&nbsp;
             <router-link to="/user/findPW" class="text-grey-9 underline-hover"

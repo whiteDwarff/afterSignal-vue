@@ -72,23 +72,21 @@
               </tr>
               <tr>
                 <td class="border q-py-md">
-                  <template v-if="!form.isMasked">
-                    <span class="text-subtitle2 underline-hover">
-                      {{ form.maskedEmail }}
-                    </span>
-                    <q-btn
-                      @click="form.isMasked = true"
-                      class="q-ml-md bg-teal-2 text-white border"
-                      dense
-                      unelevated
-                      label="마스크 제거"
-                    />
-                  </template>
-                  <template v-else>
-                    <span class="text-subtitle2 underline-hover">
-                      {{ form.email }}
-                    </span>
-                  </template>
+                  <span
+                    @click="copyedEmail"
+                    class="text-subtitle2 underline-hover cursor-pointer"
+                  >
+                    {{ email }}
+                    <q-tooltip class="text-caption">copy</q-tooltip>
+                  </span>
+                  <q-btn
+                    v-if="!form.isMasked"
+                    @click="form.isMasked = true"
+                    class="q-ml-md bg-teal-2 text-white border"
+                    dense
+                    unelevated
+                    label="마스크 제거"
+                  />
                 </td>
               </tr>
             </tbody>
@@ -118,7 +116,12 @@ const form = ref({
   isMasked: false,
 });
 
+const email = computed(() => {
+  return form.value.isMasked ? form.value.email : form.value.maskedEmail;
+});
+
 const findUserEmail = async () => {
+  form.value.isMasked = false;
   form.value.tel = `${form.value.firstTel}-${form.value.otherTel}`;
   isLoadingState.value = true;
   try {
@@ -135,6 +138,13 @@ const findUserEmail = async () => {
   } finally {
     isLoadingState.value = false;
   }
+};
+
+// 이메일 클립보드에 복사
+const copyedEmail = () => {
+  window.navigator.clipboard.writeText(email.value).then(() => {
+    baseNotify('이메일이 복사되었습니다.');
+  });
 };
 </script>
 

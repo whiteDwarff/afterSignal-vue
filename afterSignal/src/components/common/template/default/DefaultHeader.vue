@@ -79,12 +79,7 @@
                 MY PAGE
               </q-item>
               <q-separator color="grey-14"></q-separator>
-              <q-item
-                @click="serviceUserStore.logout"
-                clickable
-                dense
-                class="items-center"
-              >
+              <q-item @click="logout" clickable dense class="items-center">
                 <q-icon name="sym_o_logout" class="q-mr-sm" color="red" />
                 LOGOUT
               </q-item>
@@ -97,9 +92,19 @@
 </template>
 
 <script setup>
-const serviceUserStore = useServiceUserStore();
-
-const { serviceUser, isAuthState } = storeToRefs(serviceUserStore);
+const props = defineProps({
+  serviceUser: {
+    type: Object,
+    required: true,
+  },
+  isAuthState: {
+    type: Boolean,
+    default: () => false,
+  },
+  logout: {
+    type: Function,
+  },
+});
 </script>
 
 <style scoped></style>

@@ -7,7 +7,7 @@
       <!-- 이메일 -->
       <q-card-section class="q-pb-none">
         <small class="block q-mb-sm">* E-mail</small>
-        <div class="row q-col-gutter-x-sm items-center">
+        <div class="row q-col-gutter-x-sm">
           <q-input
             v-model="form.email"
             dense
@@ -15,13 +15,16 @@
             color="red-3"
             maxlength="50"
             class="col-8"
-            :class="{ 'bg-grey-3': form.isEmailCheck }"
+            :bg-color="form.isEmailCheck ? 'grey-3' : 'white'"
             :rules="[validateEmail]"
             lazy-rules
             hide-bottom-space
             :readonly="form.isEmailCheck"
           />
-          <div class="col-1 text-center">
+          <div
+            class="col-1 text-center flex items-center justify-center"
+            style="height: 38px"
+          >
             <q-btn
               @click="reset('email')"
               :disable="!form.isEmailCheck"
@@ -86,11 +89,11 @@
       <!-- 닉네임 -->
       <q-card-section class="q-pb-none">
         <small class="block q-mb-sm">* Nickname</small>
-        <div class="row q-col-gutter-x-sm items-center">
+        <div class="row q-col-gutter-x-sm">
           <q-input
             v-model="form.nickname"
             class="col-8"
-            :class="{ 'bg-grey-3': form.isNicknameCheck }"
+            :bg-color="form.isNicknameCheck ? 'grey-3' : 'white'"
             dense
             outlined
             color="red-3"
@@ -100,7 +103,10 @@
             hide-bottom-space
             :readonly="form.isNicknameCheck"
           />
-          <div class="col-1 text-center">
+          <div
+            class="col-1 text-center flex items-center justify-center"
+            style="height: 38px"
+          >
             <q-btn
               @click="reset('nickname')"
               :disable="!form.isNicknameCheck"

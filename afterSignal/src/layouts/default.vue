@@ -1,7 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lff" class="bg-white">
-    <DefaultHeader />
-
+    <DefaultHeader :serviceUser :isAuthState :logout="userService.logout" />
     <q-page-container :style="pageContainerStyles">
       <q-page>
         <!-- router-view -->
@@ -25,8 +24,10 @@
 import { useCookies } from '@vueuse/integrations/useCookies';
 
 const systemStore = useSystemStore();
-const userService = useServiceUserStore();
 const { isLoadingState } = storeToRefs(systemStore);
+
+const userService = useServiceUserStore();
+const { serviceUser, isAuthState } = storeToRefs(userService);
 
 const route = useRoute();
 

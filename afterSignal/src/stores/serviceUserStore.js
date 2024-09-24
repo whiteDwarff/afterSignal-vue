@@ -4,7 +4,7 @@ import { useStorage, StorageSerializers } from '@vueuse/core';
 import { useRouter } from 'vue-router';
 
 import { baseNotify } from 'src/utils/base-notify';
-import { removeCookies } from 'src/utils/common';
+import { getCookies, removeCookies } from 'src/utils/common';
 
 export const useServiceUserStore = defineStore('serviceUser', () => {
   // 로그인 상태를 담는 객체 login: true, logout : false
@@ -21,6 +21,7 @@ export const useServiceUserStore = defineStore('serviceUser', () => {
    * @param {string} storage - 저장소 (default : localStorage)
    * @param {object} serializer - 직렬화 (JSON.stringify() <> JSON.parse()를 실시간으로 ref 객체로 변환)
    */
+
   const serviceUser = useStorage(
     'service/user',
     {

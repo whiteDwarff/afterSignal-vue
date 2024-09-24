@@ -40,7 +40,7 @@
               lazy-rules
               hide-bottom-space
             />
-            <div class="col-1">
+            <div class="col-1 flex justify-center">
               <q-btn
                 @click="reset"
                 :disable="!form.isNicknameCheck"
@@ -215,6 +215,7 @@
 <script setup>
 import { firstTelOptions } from 'src/options/common';
 import { inputEmptyCheck, validateTel } from '/src/utils/validate-rules';
+import { getCookies, setCookies } from 'src/utils/common';
 
 // store ---------------------------
 const systemStore = useSystemStore();
@@ -328,7 +329,11 @@ const submit = async () => {
     });
     if (data.status == 200) {
       baseNotify('프로필이 변경되었습니다.');
-      serviceUserStore.setUser(data.result.user);
+      //  serviceUserStore.setUser(data.result.user);
+      // 쿠키에 저장된 정보가 잇다면 갱신
+      if (getCookies('serviceUser'))
+        setCookies('serviceUser', data.result.user);
+      form.value.isNicknameCheck = false;
     } else {
       baseNotify('프로필이 변경에 실패하였습니다.', { type: 'warning' });
     }
