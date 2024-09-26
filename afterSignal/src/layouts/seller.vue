@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lff" class="bg-white">
-    ADMIN VIEW
+    SELLER VIEW
     <router-view />
   </q-layout>
 </template>

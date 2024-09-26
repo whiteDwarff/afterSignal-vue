@@ -6,7 +6,6 @@
 
 <script setup>
 import dayjs from 'dayjs';
-import { storeToRefs } from 'pinia';
 
 const serviceUserStore = useServiceUserStore();
 const { serviceUser } = storeToRefs(serviceUserStore);
@@ -29,3 +28,8 @@ const pgData = ref({
 </script>
 
 <style lang="scss" scoped></style>
+
+<route lang="yaml">
+meta:
+  layout: default
+</route>

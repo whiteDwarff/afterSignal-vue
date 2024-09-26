@@ -126,7 +126,6 @@ const findUserEmail = async () => {
   isLoadingState.value = true;
   try {
     const { data } = await api.post('/user/findUserEmail', form.value);
-
     if (data.status == 200) {
       isDialog.value = true;
       form.value = { ...form.value, ...data.result.info };

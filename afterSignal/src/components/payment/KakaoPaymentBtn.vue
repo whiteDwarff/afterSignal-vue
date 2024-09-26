@@ -21,14 +21,14 @@ const onPaymentByKakao = () => {
       ...modelValue.value,
     },
     (res) => {
-      console.log(res);
       if (res.success) {
         // axios로 DB 저장
 
-        // 페이지 라우팅
         baseNotify('결제에 성공하였습니다.');
+        // 페이지 라우팅
+        // router.push('/')
       } else {
-        baseNotify(err_msg, { type: 'warning' });
+        baseNotify(res.error_msg, { type: 'warning' });
       }
     },
   );

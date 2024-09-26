@@ -47,3 +47,8 @@ const pageContainerStyles = computed(() => ({
 
 <style src="src/css/common.css"></style>
 <style src="src/css/default.css"></style>
+
+<route lang="yaml">
+meta:
+  layout: default
+</route>
