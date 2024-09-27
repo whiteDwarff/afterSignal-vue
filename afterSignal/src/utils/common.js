@@ -1,4 +1,5 @@
 import { useCookies } from '@vueuse/integrations/useCookies';
+
 /**
  * 쿠키 저장
  * @param {string} cookieName - 브라우저에 저장될 쿠키명
@@ -14,6 +15,18 @@ export const setCookies = (cookieName, data, path = '/') => {
   useCookies().set(cookieName, data, {
     path,
     expires,
+  });
+};
+
+/**
+ * jwt 토큰을 쿠키에 저장
+ * @param {string} token - 브라우저에 저장될 쿠키명
+ * @param {string} path - 패스 경로 (default : /)
+ */
+export const setJwtCookies = (token, path = '/') => {
+  useCookies().set('accessToken', token, {
+    path,
+    maxAge: 3600,
   });
 };
 

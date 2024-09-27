@@ -57,8 +57,11 @@ export const useServiceUserStore = defineStore('serviceUser', () => {
     if (!confirm('로그아웃 하시겠습니까?')) return;
     // 사용자 정보 초기화
     setUser();
+
     // 저장된 쿠키가 있다면 삭제
     removeCookies('serviceUser');
+    removeCookies('accessToken');
+
     baseNotify('로그아웃 되었습니다.');
     router.push('/');
   };

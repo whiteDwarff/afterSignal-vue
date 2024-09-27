@@ -46,7 +46,6 @@ const view = ref([
 const viewMode = ref(useRoute().query?.view || 'profile');
 // nav 클릭 시 router에 쿼리 추가
 watch(viewMode, (newValue) => {
-  console.log(viewMode.value);
   router.push({
     query: { view: newValue },
   });

@@ -7,7 +7,7 @@
 						ㄴ seller.vue
 						ㄴ /seller
 								ㄴ index.vue
-								ㄴ shop.vue
+								ㄴ shop.vue 
 	-->
   <router-view />
 </template>
