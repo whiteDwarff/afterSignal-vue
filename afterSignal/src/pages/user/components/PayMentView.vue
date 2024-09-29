@@ -43,7 +43,7 @@ const selectDepositList = async () => {
       baseNotify('목록 조회에 실패하였습니다.');
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   } finally {
     isLoadingState.value = false;
   }

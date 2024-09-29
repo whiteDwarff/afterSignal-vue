@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lff" class="bg-white">
-    <DefaultHeader :serviceUser :isAuthState :logout="userService.logout" />
+    <DefaultHeader :serviceUser :isAuthState :logout="userLogout" />
     <q-page-container :style="pageContainerStyles">
       <q-page>
         <!-- router-view -->
@@ -30,9 +30,15 @@ const userService = useServiceUserStore();
 const { serviceUser, isAuthState } = storeToRefs(userService);
 
 const route = useRoute();
+const router = useRouter();
 
 const cookie = useCookies();
 const userStoredCookie = cookie.get('serviceUser');
+
+const userLogout = () => {
+  userService.logout();
+  router.push('/');
+};
 
 // 쿠키에 저장된 사용자 정보가 있다면 로그인 상태로 변경
 if (userStoredCookie) {

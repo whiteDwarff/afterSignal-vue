@@ -85,7 +85,7 @@ import { validateEmail, validatePassword } from '/src/utils/validate-rules';
 import { useSystemStore } from 'src/stores/systemStore';
 import { useServiceUserStore } from 'src/stores/serviceUserStore';
 import { storeToRefs } from 'pinia';
-import { setCookies, setJwtCookies } from 'src/utils/common';
+import { setCookies } from 'src/utils/common';
 
 const systemStore = useSystemStore();
 const serviceUserStore = useServiceUserStore();
@@ -107,13 +107,13 @@ const signIn = async () => {
   isLoadingState.value = true;
   try {
     const { data } = await api.post('/user/signInUser', form.value);
-    console.log(data);
     if (data.status == 200) {
       // 쿠키에 로그인 정보 저장
       if (form.value.isLoginInfoSaved)
         setCookies('serviceUser', data.result.user, '/');
 
-      setJwtCookies(data.result.accessToken);
+      setCookies('accessToken', data.result.accessToken);
+
       serviceUserStore.setUser(data.result.user);
       baseNotify(`${data.result.user.name}님 환영합니다 😃`);
       // 라우터네비게이션가드를 통해 로그인 페이지로 왔다면 직전 페이지로 이동

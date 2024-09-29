@@ -327,12 +327,15 @@ const submit = async () => {
     const { data } = await api.post('/user/updateInfo', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
+    console.log(data);
     if (data.status == 200) {
+      // store에 저장된 사용자 정보 갱신
       baseNotify('프로필이 변경되었습니다.');
-      //  serviceUserStore.setUser(data.result.user);
+      serviceUserStore.setUser(data.result.user);
       // 쿠키에 저장된 정보가 잇다면 갱신
       if (getCookies('serviceUser'))
         setCookies('serviceUser', data.result.user);
+
       form.value.isNicknameCheck = false;
     } else {
       baseNotify('프로필이 변경에 실패하였습니다.', { type: 'warning' });

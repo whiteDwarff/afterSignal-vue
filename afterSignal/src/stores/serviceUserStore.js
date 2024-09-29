@@ -1,8 +1,6 @@
 import { defineStore } from 'pinia';
 import { useStorage, StorageSerializers } from '@vueuse/core';
 
-import { useRouter } from 'vue-router';
-
 import { baseNotify } from 'src/utils/base-notify';
 import { getCookies, removeCookies } from 'src/utils/common';
 
@@ -11,8 +9,6 @@ export const useServiceUserStore = defineStore('serviceUser', () => {
   const isAuthState = computed(() => !!serviceUser.value.seq);
   // 사용자의 seq를 반환
   const getUserSeq = computed(() => serviceUser.value.seq);
-
-  const router = useRouter();
 
   /**
    * @doc   https://vueuse.org/core/useStorage/
@@ -63,7 +59,7 @@ export const useServiceUserStore = defineStore('serviceUser', () => {
     removeCookies('accessToken');
 
     baseNotify('로그아웃 되었습니다.');
-    router.push('/');
+    // router.push('/');
   };
   return {
     isAuthState,
