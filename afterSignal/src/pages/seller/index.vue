@@ -1,7 +1,7 @@
 <template>
   <div>
     INDEX
-    <DropZone :thumbnail="{enable: true}"/>  
+    <DropZone :thumbnail="{ enable: true }" url="dadadada"/>  
   </div>
 </template>
 

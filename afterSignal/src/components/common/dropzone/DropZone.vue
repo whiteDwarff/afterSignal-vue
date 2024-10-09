@@ -1,18 +1,43 @@
 <template>
-<div id="dropzone" class="vue-dropzone dropzone">
-    <div class="dz-message" style="margin: 0">
-        Drop files here or click to upload.
+  <div id="dropzone-wrap">
+    <div class="dropzone">
+      <div class="dz-message" style="margin: 0">
+        <span>
+          {{ !message ? 'Drop files here or click to upload.' : message }}
+        </span>
+        <br><br>
+        <span>
+          Uploadable extensions :
+          <b style="text-decoration: underline;">{{ ext.replaceAll(',', ' ') }}</b>
+        </span>
+      </div>
     </div>
-</div>
-
+  </div>
 </template>
 
 <script setup>
-import Dropzone from "dropzone"
 import { fileExtCheck } from 'src/utils/file';
-
-
+import Dropzone from "dropzone"
+/**
+ * @message
+ *    - dz-message (드랍존 내부 메시지)
+ *    - type    : String
+ *    - default : ''
+ * @ext        
+ *    - extensions (파일 확장자)
+ *    - type    : String
+ *    - default : .jpeg,.jpg,.png,.gif
+ * @thumbnail 
+ *    - 업로드 시 썸네일 활성화 여부
+ *    - type    : Object (enable, width, height)
+ *    - default : { enable: false }
+ */
+// props
 const props = defineProps({
+  message: {
+    type: String,
+    default: () => ''
+  },
   ext: {
     type: String,
     default: () => '.jpeg,.jpg,.png,.gif'
@@ -22,26 +47,40 @@ const props = defineProps({
     default: () => ({
       enable: false,
     })
+  },
+  url: {
+    type: String,
+    required: true
+  },
+  maxFiles: {
+    type: Number,
+    default: () => 10
   }
-})
+});
+
+// emit 
+const emits = defineEmits([
+  'upload-success',
+  'upload-error'
+]);
 
 const options = ref({
-	url: 'aaaaaaa',
-  autoProcessQueue: false,                       // 파일 선택 한 즉시 서버에 업로드 비활성화  
-  autoQueue: false,
-	paramName: 'dzFile',				                   // 전송되는 파일 매개변수의 이름
-	createImageThumbnails: props.thumbnail.enable, // 이미지의 썸네일을 생성할지 여부
-	thumbnailWidth: props.thumbnail?.width || 200,
-	thumbnailHeight:  props.thumbnail?.height || 200,
-  addRemoveLinks: true,                           // 삭제버튼 활성화
-  dictRemoveFile: 'delete',                       // 삭제버튼 text
-  acceptedFiles: props.ext                        // 업로드 가능한 확장자 설정
-})
+	url: props.url,                                   // 업로드 URL
+	createImageThumbnails: props.thumbnail.enable,    // 이미지의 썸네일을 생성할지 여부
+	thumbnailWidth: props.thumbnail?.width || 200,    // 썸네일 가로 크기
+	thumbnailHeight: props.thumbnail?.height || 200,  // 썸네일 세로 크기
+  acceptedFiles: props.ext,                         // 업로드 가능한 확장자 설정
+  maxFiles: props.maxFiles,                         // 업로드 파일수
 
+  autoProcessQueue: false,                          // 자동으로 보내기. true : 파일 업로드 되자마자 서버로 요청, false : 서버에는 올라가지 않은 상태. 따로 this.processQueue() 호출시 전송
+  autoQueue: false,                                 // // 드래그 드랍 후 바로 서버로 전송
+	paramName: 'dzFile',				                      // 전송되는 파일 매개변수의 이름
+  addRemoveLinks: true,                             // 삭제버튼 활성화
+  dictRemoveFile: 'delete',                         // 삭제버튼 text
+});
 
 onMounted(() => {
-
-	new Dropzone('#dropzone', {
+	new Dropzone('.dropzone', {
     // options 할당
     ...options.value,
     // Dropzone 생성
@@ -49,28 +88,36 @@ onMounted(() => {
 
       // Dropzone element에 파일 추가 시 이벤트 발생
       this.on('addedfile', uploadFile => {
+
+        const extArr = props.ext.split(',');
+        // 선택 가능한 확장자가 아님
+        if(fileExtCheck(uploadFile, extArr)) {
+          baseNotify(`[${extArr.join(', ')}] 확장자만 등록할 수 있습니다.`, {
+            type: 'warning'
+          });
+          return this.removeFile(uploadFile);
+        }
+
         if (this.files.length) {
-          const extArr = props.ext.split(',');
-          // 선택 가능한 확장자가 아닐 경우
-          if(fileExtCheck(uploadFile, extArr)) {
-            baseNotify(`[${extArr.join(', ')}] 확장자만 등록할 수 있습니다.`, {
+          // 업로드 가능한 파일 개수를 초과
+          if(this.files.length > this.options.maxFiles) {
+            baseNotify(`업로드 가능한 파일은 ${this.options.maxFiles}개 입니다.`, {
               type: 'warning'
             });
-            this.removeFile(uploadFile);
+            return this.removeFile(uploadFile);
           }
 
-          // 저장된 파일과 추가한 파일이 동일한 경우
+          // 저장된 파일과 추가한 파일이 동일
           for (let i = 0; i < this.files.length - 1; i++) {
               if (
                 this.files[i].name === uploadFile.name &&
                 this.files[i].size === uploadFile.size &&
                 this.files[i].lastModifiedDate.toString() === uploadFile.lastModifiedDate.toString()
               ) 
-                this.removeFile(uploadFile);
+                return this.removeFile(uploadFile);
           }
         } 
       }) // addedfile end
-
 
     },
   })
