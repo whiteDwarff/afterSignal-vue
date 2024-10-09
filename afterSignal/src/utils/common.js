@@ -32,6 +32,36 @@ export const getCookies = (cookieName) => {
 };
 
 /**
+ * 쿠키에 저장된 jwt토큰 유무 확인과 만료시간 5분전 검사
+ * @param {string} cookieName
+ * @return {boolean}
+ */
+export const isCookieValid = (cookieName) => {
+  const token = useCookies().get(cookieName);
+  // 쿠키가 없음
+  if (!token) return false;
+  try {
+    // JWT 토큰의 Payload 추출
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    // Base64 디코딩 후 JSON 파싱
+    const payload = JSON.parse(atob(base64));
+
+    const currentTime = Math.floor(new Date().getTime() / 1000);
+    // 5분을 초로 변환
+    const timeBeforeExpiry = 5 * 60;
+
+    // 만료 시간이 5분 이하로 남았는지 확인
+    if (payload.exp - currentTime <= timeBeforeExpiry) return false; // 5분 이하 남았으면 유효하지 않음
+
+    return true;
+  } catch (error) {
+    console.error('쿠키 파싱 중 오류 발생:', error);
+    return false;
+  }
+};
+
+/**
  * 문자열을 원화단위로 변환 후 반환
  * @param {string || number} value - 금액
  * @returns {string} 원화단위로 변경된 금액(세자리 콤마)

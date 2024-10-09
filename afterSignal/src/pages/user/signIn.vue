@@ -112,15 +112,12 @@ const signIn = async () => {
       if (form.value.isLoginInfoSaved)
         setCookies('serviceUser', data.result.user, '/');
 
-      setCookies('accessToken', data.result.accessToken);
-
       serviceUserStore.setUser(data.result.user);
       baseNotify(`${data.result.user.name}님 환영합니다 😃`);
       // 라우터네비게이션가드를 통해 로그인 페이지로 왔다면 직전 페이지로 이동
       const redirectionPath = route.redirectedFrom?.fullPath || '/';
       router.push(redirectionPath);
     } else {
-      console.log(data);
       baseNotify(data.result.msg, { type: 'warning' });
     }
   } catch (err) {

@@ -9,7 +9,7 @@ export function baseNotify(message, options) {
     message,
     html: true,
     ...options,
-    timeout: options?.timeout || 500,
+    timeout: options?.timeout || 2000,
   });
 }
 

@@ -3,7 +3,12 @@ import { VueReCaptcha } from 'vue-recaptcha-v3';
 import { useSystemStore } from 'src/stores/systemStore';
 import { useServiceUserStore } from 'src/stores/serviceUserStore';
 import { storeToRefs } from 'pinia';
-import { getCookies, setCookies, removeCookies } from 'src/utils/common';
+import {
+  getCookies,
+  setCookies,
+  removeCookies,
+  isCookieValid,
+} from 'src/utils/common';
 
 import axios from 'axios';
 
@@ -14,6 +19,7 @@ const systemStore = useSystemStore();
 const { isLoadingState } = storeToRefs(systemStore);
 
 const serviceUserStore = useServiceUserStore();
+const { isAuthState, serviceUser } = storeToRefs(serviceUserStore);
 
 export default boot(({ app, router }) => {
   // axios
@@ -22,7 +28,9 @@ export default boot(({ app, router }) => {
 
   // 쿠키에 저장된 accessToken이 있다면 request 요청 시 토큰을 보낸다.
   api.interceptors.request.use((req) => {
-    const accessToken = getCookies('accessToken');
+    const cookieName = 'accessToken';
+    const accessToken = getCookies(cookieName);
+    const validJwtToken = isCookieValid(cookieName);
 
     if (accessToken) req.headers.Authorization = accessToken;
 

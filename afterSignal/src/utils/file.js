@@ -6,6 +6,5 @@
 export function fileExtCheck({ name: fileName }, extArr) {
   const lastDot = fileName.lastIndexOf('.');
   const ext = fileName.substring(lastDot, fileName.length).toLowerCase();
-
   return !extArr.includes(ext) ? true : false;
 }
