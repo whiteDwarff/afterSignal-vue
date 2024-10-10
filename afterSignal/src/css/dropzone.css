@@ -1,7 +1,10 @@
-.dropzone {
-  border: 3px dotted rgba(0, 0, 0, .3);
+#dropzone-wrap {
   width: 95%;
   margin: 0 auto;
+}
+.dropzone {
+  border: 3px dotted rgba(0, 0, 0, .3);
+  width: 100%;
   letter-spacing: 0.2px;
   color: #777;
   transition: 0.4s linear;
