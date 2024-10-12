@@ -1,8 +1,8 @@
 <template>
   <q-card flat class="user-form-wrap q-py-xl">
-    <div class="text-center q-mb-lg">
-      <span class="text-h4">Sign up</span>
-    </div>
+
+    <PageSubTitle title="Sign Up" />
+
     <q-form @submit.prevent="signUpUser">
       <!-- 이메일 -->
       <q-card-section class="q-pb-none">
@@ -156,8 +156,7 @@
             class="col-6"
             color="red-3"
             options-dense
-            emit-value
-            map-options
+        
           ></q-select>
           <q-input
             v-model="form.otherTel"

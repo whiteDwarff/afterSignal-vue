@@ -98,8 +98,6 @@
               class="col-6"
               options-dense
               :options="firstTelOptions"
-              emit-value
-              map-options
             />
             <q-input
               v-model="form.otherTel"

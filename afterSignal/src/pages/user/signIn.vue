@@ -1,8 +1,6 @@
 <template>
   <q-card flat class="user-form-wrap q-py-xl">
-    <div class="text-center q-mb-lg">
-      <span class="text-h4">Sign In</span>
-    </div>
+    <PageSubTitle title="Sign In" />
     <q-form @submit.prevent="signIn">
       <!-- 이메일 -->
       <q-card-section class="q-pb-none">

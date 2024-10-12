@@ -1,6 +1,6 @@
 #dropzone-wrap {
-  width: 95%;
-  margin: 0 auto;
+  /* width: 95%;
+  margin: 0 auto; */
 }
 .dropzone {
   border: 3px dotted rgba(0, 0, 0, .3);
