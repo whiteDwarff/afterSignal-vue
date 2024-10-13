@@ -10,6 +10,7 @@ import {
   isCookieValid,
 } from 'src/utils/common';
 
+
 import axios from 'axios';
 
 const api = axios.create({ baseURL: '/api' });
@@ -47,7 +48,6 @@ export default boot(({ app, router }) => {
       return res;
     },
     (err) => {
-      console.log(router);
       if (err.status === 401) {
         baseNotify(err.response.data.message, { type: 'warning' });
         // 로그인 뷰 이동
@@ -73,4 +73,8 @@ export default boot(({ app, router }) => {
   };
 });
 
-export { axios, api, isLoadingState };
+export { 
+  axios, 
+  api, 
+  isLoadingState,
+};

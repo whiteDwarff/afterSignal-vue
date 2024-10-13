@@ -1,4 +1,5 @@
 import { useCookies } from '@vueuse/integrations/useCookies';
+import { onMounted, onBeforeUnmount } from 'vue';
 
 /**
  * 쿠키 저장
@@ -71,3 +72,18 @@ export const localeToMoney = (value) => {
   if (value != null && value != undefined) return value.toLocaleString('ko-KR');
   else return;
 };
+
+
+// -----------------------------------------------------------
+// form에 입렫된 값이 있다면 브라우저 닫기, 새로고침, 뒤로가기 이벤트 제어
+const unLoadEvent = e => {
+  e.preventDefault();
+  e.returnValue = '';
+}
+
+export const addBeforeunload = () => {
+  window.addEventListener('beforeunload', unLoadEvent);
+}
+export const removeBeforeunload = () => {
+  window.removeEventListener('beforeunload', unLoadEvent);
+}

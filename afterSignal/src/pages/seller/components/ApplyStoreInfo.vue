@@ -1,5 +1,5 @@
 <template>
-	<q-form>
+	<!-- <q-form> -->
 		<!-- 이메일 -->
 		<q-card-section class="q-pb-none">
 			<small class="block q-mb-sm">* STORE NAME</small>
@@ -10,7 +10,6 @@
 					color="red-3"
 					maxlength="50"
 					class="col-8"
-					:bg-color="form.isEmailCheck ? 'grey-3' : 'white'"
 					:rules="[(val) => inputEmptyCheck(val, '매장명을')]"
 					lazy-rules
 					hide-bottom-space
@@ -38,13 +37,13 @@
 					mask="###-####"
 					minlength="8"
 					maxlength="9"
-					:rules="[(val) => validateTel(form)]"
+					:rules="[(val) => inputEmptyCheck(val, '전화번호를')]"
 					lazy-rules
 					hide-bottom-space
 				/>
 			</div>
 		</q-card-section>
-		<!-- 네이버플레이스 URL -->
+		<!-- URL -->
 		<q-card-section class="q-pb-none">
 			<small class="block q-mb-sm">* URL (자사 혹은 네이버 플레이스 URL을 입력해주세요)</small>
 			<q-input
@@ -53,7 +52,7 @@
 				outlined
 				color="red-3"
 				maxlength="100"
-				:rules="[(val) => inputEmptyCheck(val, '네이버플레이스 URL을')]"
+				:rules="[(val) => inputEmptyCheck(val, 'URL을')]"
 				lazy-rules
 				hide-bottom-space
 			/>
@@ -103,7 +102,7 @@
 					</div>
 				</div>
 			</q-card-section>
-			<!-- 카카오 주주 검색 -->
+			<!-- 카카오 주소 검색 -->
 			<KakaoAdress v-model="form">
 				<small class="block q-mb-sm">* ADRESS</small>
 			</KakaoAdress>
@@ -111,14 +110,16 @@
 				<small class="block q-mb-sm">STORE IMAGE</small>
 				<!-- dropzone -->
 				<DropZone 
-					v-model="isSubmit"
+					v-model:submit="isSubmit"
+					v-model:form="form"
 					url="/api/common/dropzoneSaveFiles"
 					:thumbnail="{ enable: true }" 
+					:fileRequired="true"
 					@upload-error="console.log('fail');"
 					@upload-success="console.log('ok');"
 				/>  
 		</q-card-section>
-  </q-form>
+  <!-- </q-form> -->
 </template>
 
 <script setup>
@@ -128,12 +129,15 @@ import { firstNumberOptions } from 'src/options/common';
 const props = defineProps({
 	changeDistrictByOptions: {
 		type: Function
+	},
+	// select options  
+	options : {
+		type: Object
 	}
-})
+});
 // apply info
 const form = defineModel();
 // dropzone submit event trigger
 const isSubmit = defineModel('isSubmit');
-// select options  
-const options = defineModel('options');
+// const options = defineModel('options');
 </script>
