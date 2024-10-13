@@ -22,7 +22,8 @@
 				dense
 				outlined
 				color="red-3"
-				maxlength="10"
+				maxlength="12"
+				minlength="12"
 				mask="###-##-#####"
 				:rules="[(val) => inputEmptyCheck(val, '사업자등록번호를')]"
 				lazy-rules
@@ -32,9 +33,9 @@
 		<q-card-section>
 			<small class="block q-mb-sm">* Certificate for Business Registration</small>
 			<div class="border q-pa-md rounded-borders flex justify-between items-center">
-				<input @change="form.businessFile = $event.target.files" ref="refFileInput" type="file" />
+				<input @change="form.businessRegistration = $event.target.files[0]" ref="refFileInput" type="file" />
 				<q-btn
-					v-if="form.businessFile"
+					v-if="form.businessRegistration"
 					@click="deleteBusinessFile"
 					round
 					dense
@@ -57,7 +58,7 @@ const form = defineModel();
 const refFileInput = ref(null);
 
 const deleteBusinessFile = () => {
-	form.value.businessFile = null;
+	form.value.businessRegistration = null;
 	refFileInput.value.value = null;
 };
 

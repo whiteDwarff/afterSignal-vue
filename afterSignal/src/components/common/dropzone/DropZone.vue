@@ -26,10 +26,8 @@
 </template>
 
 <script setup>
-import { defineExpose } from 'vue';
 import { fileExtCheck } from 'src/utils/file';
 import Dropzone from "dropzone"
-import { baseNotify } from 'src/utils/base-notify';
 /**
  * @message
  *    - dz-message (드랍존 내부 메시지)
@@ -44,7 +42,6 @@ import { baseNotify } from 'src/utils/base-notify';
  *    - type    : Object (enable, width, height)
  *    - default : { enable: false }
  */
-// props
 const props = defineProps({
   message: {    // dz-message
     type: String,
@@ -74,13 +71,13 @@ const props = defineProps({
   },
 });
 
-// emit 
 const emits = defineEmits([
   'upload-success', // 업로드 성공
   'upload-error'    // 업로드 실패
 ]);
-
+// submit satae
 const isSubmit = defineModel('submit');
+// form info
 const form = defineModel('form');
 
 const options = ref({
@@ -130,7 +127,7 @@ onMounted(() => {
             });
           }
 
-          // 저장된 파일과 추가한 파일이 동일
+          // 중복파일 저장 x
           for (let i = 0; i < this.files.length - 1; i++) {
               if (
                 this.files[i].name === uploadFile.name &&
@@ -144,6 +141,8 @@ onMounted(() => {
 
       // 업로드한 파일을 서버에 요청하는 동안 호출 실행
       this.on('sending', function (file, xhr, formData) {
+        isLoadingState.value = true;
+
         for (let key of Object.keys(form.value)) {
           formData.append(key, form.value[key]);
         }
@@ -152,6 +151,7 @@ onMounted(() => {
       // 서버로 파일이 성공적으로 전송되면 실행
       this.on('successmultiple', function (file, responseText) {
         console.log('성공');
+        isLoadingState.value = false;
         emits('upload-success');
       });
       
@@ -159,16 +159,42 @@ onMounted(() => {
       this.on('errormultiple', function (file, errorMessage) {
         this.removeAllFiles();
         emits('upload-error');
+        isLoadingState.value = false;
         return alert(errorMessage);
       });
     },
   });
-  watchEffect(() => {
+  watchEffect(async () => {
     if(isSubmit.value) {
-      console.log(dropzone);
-      if(props.fileRequired && !dropzone.files.length)
+      // 첨부파일 등록이 필수인 경우
+      if(props.fileRequired && !dropzone.files.length) {
+        isSubmit.value = false;
         return baseNotify('파일을 첨부해주세요.', { type: 'warning' })
-      else dropzone.processQueue();
+      } else {
+        isLoadingState.value = true;
+        dropzone.processQueue();
+      }
+    
+      // 첨부파일 등록이 필수가 아닌 경우
+      if(!props.fileRequired) {
+        const formData = new FormData();
+        for (let key of Object.keys(form.value)) {
+          formData.append(key, form.value[key]);
+        }
+        
+        try {
+          // 로딩 활성화
+          isLoadingState.value = true;
+          const response = api.post(props.url.replace('/api', ''), formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+          });
+          console.log(response);
+        } catch(err) {
+            console.log(err);
+        } finally {
+            isLoadingState.value = false;
+        }
+      }
     }
   });
 

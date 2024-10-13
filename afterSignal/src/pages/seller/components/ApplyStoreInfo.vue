@@ -107,7 +107,7 @@
 				<small class="block q-mb-sm">* ADRESS</small>
 			</KakaoAdress>
 			<q-card-section class="q-pb-none under-line">
-				<small class="block q-mb-sm">STORE IMAGE</small>
+				<small class="block q-mb-sm">* STORE IMAGE</small>
 				<!-- dropzone -->
 				<DropZone 
 					v-model:submit="isSubmit"
@@ -115,8 +115,8 @@
 					url="/api/common/dropzoneSaveFiles"
 					:thumbnail="{ enable: true }" 
 					:fileRequired="true"
-					@upload-error="console.log('fail');"
-					@upload-success="console.log('ok');"
+					@upload-error="$emit('upload-error')"
+					@upload-success="$emit('upload-success');"
 				/>  
 		</q-card-section>
   <!-- </q-form> -->
@@ -125,6 +125,11 @@
 <script setup>
 import { inputEmptyCheck } from '/src/utils/validate-rules';
 import { firstNumberOptions } from 'src/options/common';
+
+const emits = defineEmits([
+  'upload-success', // 업로드 성공
+  'upload-error'    // 업로드 실패
+]);
 
 const props = defineProps({
 	changeDistrictByOptions: {
@@ -139,5 +144,4 @@ const props = defineProps({
 const form = defineModel();
 // dropzone submit event trigger
 const isSubmit = defineModel('isSubmit');
-// const options = defineModel('options');
 </script>

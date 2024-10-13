@@ -1,6 +1,6 @@
 <template>
   <q-card flat class="user-form-wrap q-py-xl">
-    <q-form @submit.prevent="">
+    <q-form @submit.prevent>
       <PageSubTitle title="Apply to Store" />
 
       <!-- tabs -->
@@ -10,8 +10,8 @@
         indicator-color="deep-purple-3"
         class="q-pt-lg"
       >
-        <q-tab name="store" label="Store Info" :ripple="false" class="cursor-pointer" />
         <q-tab name="owner" label="Owner Info" :ripple="false" class="cursor-pointer" />
+        <q-tab name="store" label="Store Info" :ripple="false" class="cursor-pointer" />
       </q-tabs>
 
       <!-- tab panels -->
@@ -20,24 +20,24 @@
         animated
         :keep-alive="true"
       >
-        <!-- <keep-alive> -->
-        <q-tab-panel name="store">
-          <ApplyStoreInfo 
-            v-model="form"
-            v-model:isSubmit="isSubmit"
-            :options
-            :changeDistrictByOptions
-          />
+          <q-tab-panel name="owner">
+            <ApplyOwnerInfo v-model="form" />
+          </q-tab-panel>
+          <q-tab-panel name="store">
+            <ApplyStoreInfo 
+              v-model="form"
+              v-model:isSubmit="isSubmit"
+              :options
+              :changeDistrictByOptions
+              @upload-error="error"
+              @upload-success="success"
+            />
         </q-tab-panel>
-        <q-tab-panel name="owner">
-          <ApplyOwnerInfo v-model="form" />
-        </q-tab-panel>
-        <!-- </keep-alive> -->
       </q-tab-panels>
 
       <q-card-section class="q-mt-md text-center">
         <q-btn
-          @click="isSubmit = true"
+          @click="submit"
           label="SUBMIT"
           type="submit"
           id="user-form-submit-btn"
@@ -50,8 +50,8 @@
       <q-card-section class="q-py-none">
         <div class="flex justify-between">
           <q-btn
-            v-if="tab == 'owner'"
-            @click="tab = 'store'"
+            v-if="tab == 'store'"
+            @click="tab = 'owner'"
             :ripple="false"
             flat
           >
@@ -60,22 +60,22 @@
               color="deep-purple-3"
               class="q-mr-sm"
             /> 
-            <span class="underline-hover text-grey-8">PREV</span>
+            <span class="underline-hover text-grey-7">PREV</span>
           </q-btn>
           <q-space/>
-            <q-btn 
-              v-if="tab == 'store'"
-              @click="tab = 'owner'"
-              :ripple="false"
-              flat
-            >
-              <span class="underline-hover text-grey-8">NEXT</span>
-              <q-icon 
-                name="sym_o_line_end_arrow_notch"
-                color="deep-purple-3"
-                class="q-ml-sm" 
-              />
-          </q-btn>
+          <q-btn 
+            v-if="tab == 'owner'"
+            @click="tab = 'store'"
+            :ripple="false"
+            flat
+          >
+            <span class="underline-hover text-grey-7">NEXT</span>
+            <q-icon 
+              name="sym_o_line_end_arrow_notch"
+              color="deep-purple-3"
+              class="q-ml-sm" 
+            />
+            </q-btn>
         </div>
       </q-card-section>
     </q-form>
@@ -83,7 +83,9 @@
 </template>
 
 <script setup>
-const tab = ref('store')
+import { baseNotify } from 'src/utils/base-notify';
+
+const tab = ref('owner')
 
 // input form
 const form = ref({
@@ -100,7 +102,7 @@ const form = ref({
   extraAddr: '',        // 참고항목
   ownerName: '',       
   businessNumber: '',   // 사업자등록번호
-  businessFile: null,   // 사업자등록증
+  businessRegistration: null,   // 사업자등록증
 });
 // select options
 const options = ref({});
@@ -110,7 +112,6 @@ const isSubmit = ref(false);
 // 공통코드 조회
 const getCommCode = async () => {
   isLoadingState.value = true;
-
   try {
     const { data } = await api.post('/user/signUp');
     options.value = { ...data.result };
@@ -129,6 +130,31 @@ const changeDistrictByOptions = (val) => {
   options.value.district = options.value[val];
 };
 
+const submit = () => {
+  if(
+    !form.value.ownerName ||
+    !form.value.businessNumber ||
+    !form.value.businessRegistration
+  ) {
+    tab.value = 'owner'
+    return;
+  } else {
+    tab.value = 'store'
+  }
+
+  isSubmit.value = true;
+}
+
+// 성공 시 실행할 로직
+const success = () => {
+  baseNotify('Success Appply!!');
+}
+// 실패 시 처리할 로직
+const error = () => {
+  baseNotify('Faild Appply!!', { type: 'warning' });
+  isSubmit.value = false;
+}
+// 새로고침, 뒤로가기, 페이지 나가기 방지
 onMounted(() => {
   addBeforeunload();
   onBeforeUnmount(() => {
