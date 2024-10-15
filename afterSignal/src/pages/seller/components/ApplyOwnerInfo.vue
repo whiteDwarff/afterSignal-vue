@@ -1,7 +1,7 @@
 <template>
 	<!-- <q-form> -->
 		<q-card-section class="q-pb-none">
-			<small class="block q-mb-sm">* OWNER NAME</small>
+			<small class="block q-mb-sm">* Owner Name</small>
 			<q-input
 				v-model="form.ownerName"
 				dense
@@ -14,9 +14,20 @@
 				hide-bottom-space
 			/>
 		</q-card-section>
+
+		<EmailInput 
+			v-model="form" 
+			:duplicated="true"
+			@reset="form.isEmailCheck = false, form.email = ''"
+			@duplicateCheck="form.isEmailCheck = true"
+		/>
+
+		<!-- 비밀번호 -->
+		<PasswordInput v-model="form" :validate="true"/>
+
 		<!-- 사업자등록번호 -->
 		<q-card-section class="q-pb-none">
-			<small class="block q-mb-sm">* BUSINESS NUMBER</small>
+			<small class="block q-mb-sm">* business Number</small>
 			<q-input
 				v-model="form.businessNumber"
 				dense

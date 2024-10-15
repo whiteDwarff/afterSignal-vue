@@ -2,7 +2,7 @@
 	<!-- <q-form> -->
 		<!-- 이메일 -->
 		<q-card-section class="q-pb-none">
-			<small class="block q-mb-sm">* STORE NAME</small>
+			<small class="block q-mb-sm">* Store Name</small>
 				<q-input
 					v-model="form.storeName"
 					dense
@@ -17,7 +17,7 @@
 		</q-card-section>
 		<!-- 매장 번호 -->
 		<q-card-section class="q-pb-none">
-			<small class="block q-mb-sm">* STORE NUMBER</small>
+			<small class="block q-mb-sm">* Store Number</small>
 			<div class="row q-col-gutter-sm">
 				<q-select
 					v-model="form.storeFirstTel"
@@ -59,7 +59,7 @@
 		</q-card-section>
 			<!-- 인스타그램 -->
 			<q-card-section class="q-pb-none">
-			<small class="block q-mb-sm">INSTAGRAM</small>
+			<small class="block q-mb-sm">Instagram</small>
 			<q-input
 				v-model="form.instagram"
 				dense
@@ -74,7 +74,7 @@
 		<q-card-section class="q-pb-none">
 				<div class="row q-col-gutter-sm">
 					<div class="col-6">
-						<small class="block q-mb-sm">CITY</small>
+						<small class="block q-mb-sm">City</small>
 						<q-select
 							v-model="form.city"
 							:options="options.city"
@@ -88,7 +88,7 @@
 						/>
 					</div>
 					<div class="col-6">
-						<small class="block q-mb-sm">DISTRICT</small>
+						<small class="block q-mb-sm">District</small>
 						<q-select
 							v-model="form.district"
 							:options="options.district"
@@ -104,10 +104,10 @@
 			</q-card-section>
 			<!-- 카카오 주소 검색 -->
 			<KakaoAdress v-model="form">
-				<small class="block q-mb-sm">* ADRESS</small>
+				<small class="block q-mb-sm">* Adress</small>
 			</KakaoAdress>
 			<q-card-section class="q-pb-none under-line">
-				<small class="block q-mb-sm">* STORE IMAGE</small>
+				<small class="block q-mb-sm">* Store Image</small>
 				<!-- dropzone -->
 				<DropZone 
 					v-model:submit="isSubmit"

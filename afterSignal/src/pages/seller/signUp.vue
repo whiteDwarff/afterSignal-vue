@@ -101,6 +101,10 @@ const form = ref({
   detailAddr: '',       // 상세주소
   extraAddr: '',        // 참고항목
   ownerName: '',       
+  email: '',            // 이메일
+  isEmailCheck: false,
+  password: '',         // 비밀번호
+  passwordConfirm: '',  // 비밀번호 확인
   businessNumber: '',   // 사업자등록번호
   businessRegistration: null,   // 사업자등록증
 });
@@ -132,14 +136,26 @@ const changeDistrictByOptions = (val) => {
 
 const submit = () => {
   if(
-    !form.value.ownerName ||
-    !form.value.businessNumber ||
-    !form.value.businessRegistration
+    !form.value.ownerName || !form.value.businessNumber ||
+    !form.value.businessRegistration || !form.email ||
+    !form.value.password || !form.value.passwordConfirm || !form.isEmailCheck
   ) {
-    tab.value = 'owner'
-    return;
+    tab.value = 'owner';
+
+    
+    // 이메일 중복검사 미실시
+    if(!form.value.isEmailCheck) 
+      return baseNotify('이메일 중복검사를 해주세요.', {
+        type: 'warning'
+      });
+
+    // 사업자 등록증 미첨부
+    if(!form.value.businessRegistration)
+      return baseNotify('사업자등록증을 첨부해주세요.', {
+        type: 'warning'
+      });
   } else {
-    tab.value = 'store'
+    tab.value = 'store';
   }
 
   isSubmit.value = true;
