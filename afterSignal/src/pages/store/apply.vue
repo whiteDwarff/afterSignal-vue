@@ -26,7 +26,6 @@
           <q-tab-panel name="store">
             <ApplyStoreInfo 
               v-model="form"
-              v-model:isSubmit="isSubmit"
               :options
               :changeDistrictByOptions
               @upload-error="error"
@@ -84,6 +83,7 @@
 
 <script setup>
 import { baseNotify } from 'src/utils/base-notify';
+import { provide } from 'vue'
 
 const tab = ref('owner')
 
@@ -105,13 +105,18 @@ const form = ref({
   isEmailCheck: false,
   password: '',         // 비밀번호
   passwordConfirm: '',  // 비밀번호 확인
+  firstTel: '010',
+  otherTel: '', 
   businessNumber: '',   // 사업자등록번호
   businessRegistration: null,   // 사업자등록증
 });
 // select options
 const options = ref({});
 
-const isSubmit = ref(false);
+// Drop event trigger
+const isSubmitState = ref(false);
+// DropZone.vue > provide
+provide('isSubmitState', isSubmitState);
 
 // 공통코드 조회
 const getCommCode = async () => {
@@ -141,7 +146,6 @@ const submit = () => {
     !form.value.password || !form.value.passwordConfirm || !form.isEmailCheck
   ) {
     tab.value = 'owner';
-
     
     // 이메일 중복검사 미실시
     if(!form.value.isEmailCheck) 
@@ -157,8 +161,7 @@ const submit = () => {
   } else {
     tab.value = 'store';
   }
-
-  isSubmit.value = true;
+  isSubmitState.value = true;
 }
 
 // 성공 시 실행할 로직
@@ -168,8 +171,9 @@ const success = () => {
 // 실패 시 처리할 로직
 const error = () => {
   baseNotify('Faild Appply!!', { type: 'warning' });
-  isSubmit.value = false;
+  isSubmitState.value = false;
 }
+
 // 새로고침, 뒤로가기, 페이지 나가기 방지
 onMounted(() => {
   addBeforeunload();

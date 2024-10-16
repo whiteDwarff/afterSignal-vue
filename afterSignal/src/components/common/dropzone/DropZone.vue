@@ -26,7 +26,9 @@
 </template>
 
 <script setup>
+import { inject } from 'vue'
 import { fileExtCheck } from 'src/utils/file';
+
 import Dropzone from "dropzone"
 /**
  * @message
@@ -41,6 +43,16 @@ import Dropzone from "dropzone"
  *    - 업로드 시 썸네일 활성화 여부
  *    - type    : Object (enable, width, height)
  *    - default : { enable: false }
+ * @fileRequired
+ *    - 첨부파일 필수 등록 여부
+ *    - type    : Boolean
+ *    - default : false
+ * @url
+ *    - Submit URL
+ *    - type    : String
+ * @maxFiles
+ *    - type    : Number
+      - default : 10
  */
 const props = defineProps({
   message: {    // dz-message
@@ -69,14 +81,24 @@ const props = defineProps({
     type: Number,
     default: () => 10
   },
+  errorMessage: {
+    type: String,
+    default: () => '파일을 첨부해주세요'
+  }
 });
 
 const emits = defineEmits([
   'upload-success', // 업로드 성공
   'upload-error'    // 업로드 실패
 ]);
-// submit satae
-const isSubmit = defineModel('submit');
+/*
+submit satae
+  - v-model -> provide(), inject()로 변경
+  - submit이 호출되는 메서드에서 provide('isSubmitState', REF_VALUE); 사용
+  // const isSubmit = defineModel('submit');
+*/
+const isSubmitState = inject('isSubmitState', false);
+
 // form info
 const form = defineModel('form');
 
@@ -165,11 +187,11 @@ onMounted(() => {
     },
   });
   watchEffect(async () => {
-    if(isSubmit.value) {
+    if(isSubmitState.value) {
       // 첨부파일 등록이 필수인 경우
       if(props.fileRequired && !dropzone.files.length) {
-        isSubmit.value = false;
-        return baseNotify('파일을 첨부해주세요.', { type: 'warning' })
+        isSubmitState.value = false;
+        return baseNotify(props.errorMessage, { type: 'warning' })
       } else {
         isLoadingState.value = true;
         dropzone.processQueue();

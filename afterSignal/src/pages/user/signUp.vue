@@ -186,7 +186,7 @@ import {
 import { firstTelOptions } from 'src/options/common';
 import { useSystemStore } from 'src/stores/systemStore';
 import { storeToRefs } from 'pinia';
-import EmailInput from 'src/components/common/user/EmailInput.vue';
+import EmailInput from 'src/components/common/user/form/EmailInput.vue';
 
 const systemStore = useSystemStore();
 const { isLoadingState } = storeToRefs(systemStore);

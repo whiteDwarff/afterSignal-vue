@@ -110,9 +110,9 @@
 				<small class="block q-mb-sm">* Store Image</small>
 				<!-- dropzone -->
 				<DropZone 
-					v-model:submit="isSubmit"
 					v-model:form="form"
 					url="/api/common/dropzoneSaveFiles"
+					errorMessage="매장 이미지를 등록해주세요."
 					:thumbnail="{ enable: true }" 
 					:fileRequired="true"
 					@upload-error="$emit('upload-error')"
@@ -142,6 +142,4 @@ const props = defineProps({
 });
 // apply info
 const form = defineModel();
-// dropzone submit event trigger
-const isSubmit = defineModel('isSubmit');
 </script>

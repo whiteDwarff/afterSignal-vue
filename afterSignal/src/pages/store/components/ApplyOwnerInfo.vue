@@ -25,6 +25,36 @@
 		<!-- 비밀번호 -->
 		<PasswordInput v-model="form" :validate="true"/>
 
+		<!-- 휴대폰 번호 -->
+		<q-card-section class="q-pb-none">
+			<small class="block q-mb-sm">* Mobile phone</small>
+			<div class="row q-col-gutter-sm">
+			<q-select
+				v-model="form.firstTel"
+				:options="firstTelOptions"
+				dense
+				outlined
+				class="col-6"
+				color="red-3"
+				options-dense
+			/>
+        	<q-input
+				v-model="form.otherTel"
+				dense
+				outlined
+				class="col-6"
+				color="red-3"
+				mask="####-####"
+				minlength="8"
+				maxlength="9"
+				:rules="[(val) => validateTel(form)]"
+				lazy-rules
+				hide-bottom-space
+        	/>
+        </div>
+    </q-card-section>
+
+
 		<!-- 사업자등록번호 -->
 		<q-card-section class="q-pb-none">
 			<small class="block q-mb-sm">* business Number</small>
@@ -63,7 +93,13 @@
 </template>
 
 <script setup>
-import { inputEmptyCheck } from '/src/utils/validate-rules';
+import {
+    validateTel,
+	inputEmptyCheck,
+} from '/src/utils/validate-rules';
+
+import { firstTelOptions } from 'src/options/common';
+
 
 const form = defineModel();
 const refFileInput = ref(null);
