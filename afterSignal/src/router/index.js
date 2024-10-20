@@ -28,8 +28,8 @@ export default route(function (/* { store, ssrContext } */) {
           // default layout
           let layout = 'default';
           // shop layout
-          if (route.path.includes('seller')) {
-            layout = 'seller';
+          if (route.path.includes('store')) {
+            layout = 'store';
             // admin layout
           } else if (route.path.includes('admin')) {
             layout = 'admin';

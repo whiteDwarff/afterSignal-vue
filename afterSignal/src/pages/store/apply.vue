@@ -4,33 +4,40 @@
       <PageSubTitle title="Apply to Store" />
 
       <!-- tabs -->
-      <q-tabs 
-        v-model="tab"      
+      <q-tabs
+        v-model="tab"
         active-color="deep-purple-3"
         indicator-color="deep-purple-3"
         class="q-pt-lg"
       >
-        <q-tab name="owner" label="Owner Info" :ripple="false" class="cursor-pointer" />
-        <q-tab name="store" label="Store Info" :ripple="false" class="cursor-pointer" />
+        <q-tab
+          name="owner"
+          label="Owner Info"
+          :ripple="false"
+          class="cursor-pointer"
+        />
+        <q-tab
+          name="store"
+          label="Store Info"
+          :ripple="false"
+          class="cursor-pointer"
+        />
       </q-tabs>
 
       <!-- tab panels -->
-      <q-tab-panels 
-        v-model="tab"
-        animated
-        :keep-alive="true"
-      >
-          <q-tab-panel name="owner">
-            <ApplyOwnerInfo v-model="form" />
-          </q-tab-panel>
-          <q-tab-panel name="store">
-            <ApplyStoreInfo 
-              v-model="form"
-              :options
-              :changeDistrictByOptions
-              @upload-error="error"
-              @upload-success="success"
-            />
+      <q-tab-panels v-model="tab" animated :keep-alive="true">
+        <q-tab-panel name="owner">
+          <ApplyOwnerInfo v-model="form" />
+        </q-tab-panel>
+        <q-tab-panel name="store">
+          <ApplyStoreInfo
+            v-model="form"
+            v-model:tab="tab"
+            :options
+            :changeDistrictByOptions
+            @upload-error="error"
+            @upload-success="success"
+          />
         </q-tab-panel>
       </q-tab-panels>
 
@@ -58,23 +65,23 @@
               name="sym_o_line_start_arrow_notch"
               color="deep-purple-3"
               class="q-mr-sm"
-            /> 
+            />
             <span class="underline-hover text-grey-7">PREV</span>
           </q-btn>
-          <q-space/>
-          <q-btn 
+          <q-space />
+          <q-btn
             v-if="tab == 'owner'"
             @click="tab = 'store'"
             :ripple="false"
             flat
           >
             <span class="underline-hover text-grey-7">NEXT</span>
-            <q-icon 
+            <q-icon
               name="sym_o_line_end_arrow_notch"
               color="deep-purple-3"
-              class="q-ml-sm" 
+              class="q-ml-sm"
             />
-            </q-btn>
+          </q-btn>
         </div>
       </q-card-section>
     </q-form>
@@ -83,32 +90,33 @@
 
 <script setup>
 import { baseNotify } from 'src/utils/base-notify';
-import { provide } from 'vue'
+import { provide } from 'vue';
 
-const tab = ref('owner')
+const tab = ref('owner');
 
 // input form
 const form = ref({
-  storeName: '',        // 매장명
-  storeFirstTel: '02',  // 매장번호 앞자리
-  storeOtherTel: '',    // 매장번호 뒷자리
-  url: '',              // 자사 홈페이지, 네이버플레이스 url
-  instagram: '',        // 인스타그램
-  city: '',             // 지역
-  district: '',         // 구
-  postCode: '',         // 우편번호
-  addr: '',             // 주소
-  detailAddr: '',       // 상세주소
-  extraAddr: '',        // 참고항목
-  ownerName: '',       
-  email: '',            // 이메일
+  storeName: '', // 매장명
+  storeFirstTel: '02', // 매장번호 앞자리
+  storeOtherTel: '', // 매장번호 뒷자리
+  url: '', // 자사 홈페이지, 네이버플레이스 url
+  instagram: '', // 인스타그램
+  city: '', // 지역
+  district: '', // 구
+  postCode: '', // 우편번호
+  addr: '', // 주소
+  detailAddr: '', // 상세주소
+  extraAddr: '', // 참고항목
+  ownerName: '',
+  email: '', // 이메일
+  checkedEmail: '',
   isEmailCheck: false,
-  password: '',         // 비밀번호
-  passwordConfirm: '',  // 비밀번호 확인
+  password: '', // 비밀번호
+  passwordConfirm: '', // 비밀번호 확인
   firstTel: '010',
-  otherTel: '', 
-  businessNumber: '',   // 사업자등록번호
-  businessRegistration: null,   // 사업자등록증
+  otherTel: '',
+  businessNumber: '', // 사업자등록번호
+  businessRegistration: null, // 사업자등록증
 });
 // select options
 const options = ref({});
@@ -120,12 +128,12 @@ provide('isSubmitState', isSubmitState);
 
 // 공통코드 조회
 const getCommCode = async () => {
-  isLoadingState.value = true;
   try {
+    isLoadingState.value = true;
     const { data } = await api.post('/user/signUp');
     options.value = { ...data.result };
     form.value.city = data.result.city[0].value;
-    changeDistrictByOptions(form.value.city)
+    changeDistrictByOptions(form.value.city);
   } catch (err) {
     console.log(err);
   } finally {
@@ -140,39 +148,42 @@ const changeDistrictByOptions = (val) => {
 };
 
 const submit = () => {
-  if(
-    !form.value.ownerName || !form.value.businessNumber ||
-    !form.value.businessRegistration || !form.email ||
-    !form.value.password || !form.value.passwordConfirm || !form.isEmailCheck
+  console.log(form.value);
+  if (
+    form.value.ownerName == '' ||
+    form.value.businessNumber == '' ||
+    form.email == '' ||
+    form.value.password == '' ||
+    form.value.passwordConfirm == '' ||
+    form.isEmailCheck == false ||
+    form.value.businessRegistration == null
   ) {
     tab.value = 'owner';
-    
     // 이메일 중복검사 미실시
-    if(!form.value.isEmailCheck) 
+    if (!form.value.isEmailCheck)
       return baseNotify('이메일 중복검사를 해주세요.', {
-        type: 'warning'
+        type: 'warning',
       });
-
     // 사업자 등록증 미첨부
-    if(!form.value.businessRegistration)
+    if (!form.value.businessRegistration)
       return baseNotify('사업자등록증을 첨부해주세요.', {
-        type: 'warning'
+        type: 'warning',
       });
   } else {
     tab.value = 'store';
   }
   isSubmitState.value = true;
-}
+};
 
 // 성공 시 실행할 로직
 const success = () => {
   baseNotify('Success Appply!!');
-}
+};
 // 실패 시 처리할 로직
 const error = () => {
   baseNotify('Faild Appply!!', { type: 'warning' });
   isSubmitState.value = false;
-}
+};
 
 // 새로고침, 뒤로가기, 페이지 나가기 방지
 onMounted(() => {

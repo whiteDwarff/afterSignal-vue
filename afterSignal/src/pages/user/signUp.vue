@@ -1,15 +1,14 @@
 <template>
   <q-card flat class="user-form-wrap q-py-xl">
-
     <PageSubTitle title="Sign Up" />
 
     <q-form @submit.prevent="signUpUser">
       <!-- 이메일 -->
-      <EmailInput 
-        v-model="form" 
+      <EmailInput
+        v-model="form"
         :duplicated="true"
-        @reset="form.isEmailCheck = false, form.email = ''"
-        @duplicateCheck="form.isEmailCheck = true"
+        @reset="(form.isEmailCheck = false), (form.email = '')"
+        @duplicateCheck="duplicateInfoCheck('email')"
       />
       <!-- 
       <q-card-section class="q-pb-none">
@@ -57,7 +56,7 @@
       </q-card-section>
       -->
       <!-- 비밀번호 -->
-      <PasswordInput v-model="form" :validate="true"/>
+      <PasswordInput v-model="form" :validate="true" />
       <!-- 닉네임 -->
       <q-card-section class="q-pb-none">
         <small class="block q-mb-sm">* Nickname</small>
@@ -128,7 +127,6 @@
             class="col-6"
             color="red-3"
             options-dense
-        
           ></q-select>
           <q-input
             v-model="form.otherTel"
@@ -241,9 +239,8 @@ const duplicateInfoCheck = async (flg) => {
   if (flg == 'email' && !validateEmailBool(form.value.email)) return;
   if (flg == 'nickname' && !form.value.nickname) return;
 
-  isLoadingState.value = true;
-
   try {
+    isLoadingState.value = true;
     const { data } = await api.post('/user/duplicatedInfoCheck', {
       ...form.value,
       flg,
