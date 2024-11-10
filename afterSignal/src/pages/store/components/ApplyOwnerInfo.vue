@@ -105,7 +105,11 @@
 
 <script setup>
 import { isLoadingState } from 'src/boot/common';
-import { validateTel, inputEmptyCheck } from '/src/utils/validate-rules';
+import {
+  validateTel,
+  inputEmptyCheck,
+  validateEmailBool,
+} from '/src/utils/validate-rules';
 import { fileExtCheck } from 'src/utils/file';
 import { firstTelOptions } from 'src/options/common';
 import { baseNotify } from 'src/utils/base-notify';
@@ -117,12 +121,14 @@ const refFileInput = ref(null);
 const duplicatedEmailCheck = async () => {
   if (!form.value.email) return baseNotify('이메일을 입력해주세요.');
 
+  if (!validateEmailBool(form.value.email)) return;
+
   try {
     isLoadingState.value = true;
     const { data } = await api.post('/store/duplicatedEmailCheck', {
       email: form.value.email,
     });
-    if (data.count > 0) return baseNotify(data.result.msg);
+    if (data.result.count > 0) return baseNotify(data.result.msg);
     else if (confirm('해당 이메일을 사용하시겠습니까?')) {
       form.value.isEmailCheck = true;
       form.value.checkedEmail = form.value.email;

@@ -182,10 +182,11 @@ onMounted(() => {
       });
 
       // 서버로 파일이 성공적으로 전송되면 실행
-      this.on('successmultiple', function (file, responseText) {
-        console.log('성공');
+      this.on('successmultiple', function (file, response) {
         isLoadingState.value = false;
-        emits('upload-success');
+        if (response.status == 200)
+          emits('upload-success', response.result.seq);
+        else emits('upload-error');
       });
 
       // 업로드 에러 처리
@@ -212,6 +213,7 @@ onMounted(() => {
       // 첨부파일 등록이 필수가 아닌 경우
       if (!props.fileRequired) {
         const formData = new FormData();
+
         for (let key of Object.keys(form.value)) {
           formData.append(key, form.value[key]);
         }
@@ -222,9 +224,11 @@ onMounted(() => {
           const response = api.post(props.url.replace('/api', ''), formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
           });
-          console.log(response);
+          if (response.status == 200)
+            emits('upload-success', response.result.seq);
+          else emits('upload-error');
         } catch (err) {
-          console.log(err);
+          emits('upload-error');
         } finally {
           isLoadingState.value = false;
         }

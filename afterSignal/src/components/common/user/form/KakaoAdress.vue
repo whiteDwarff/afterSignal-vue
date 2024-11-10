@@ -12,6 +12,8 @@
           maxlength="10"
           readonly
           placeholder="우편번호"
+          lazy-rules
+          hide-bottom-space
         />
       </div>
       <div class="col-3">

@@ -36,7 +36,7 @@
             :options
             :changeDistrictByOptions
             @upload-error="error"
-            @upload-success="success"
+            @upload-success="success($event)"
           />
         </q-tab-panel>
       </q-tab-panels>
@@ -89,8 +89,9 @@
 </template>
 
 <script setup>
-import { baseNotify } from 'src/utils/base-notify';
 import { provide } from 'vue';
+
+const router = useRouter();
 
 const tab = ref('owner');
 
@@ -148,7 +149,6 @@ const changeDistrictByOptions = (val) => {
 };
 
 const submit = () => {
-  console.log(form.value);
   if (
     form.value.ownerName == '' ||
     form.value.businessNumber == '' ||
@@ -170,13 +170,19 @@ const submit = () => {
         type: 'warning',
       });
   } else {
+    if (!form.value.postCode) {
+      return baseNotify('주소를 선택해주세요.', {
+        type: 'warning',
+      });
+    }
     tab.value = 'store';
   }
   isSubmitState.value = true;
 };
 
 // 성공 시 실행할 로직
-const success = () => {
+const success = (storeSeq) => {
+  router.push(`/store/applySuccess/${storeSeq}`);
   baseNotify('Success Appply!!');
 };
 // 실패 시 처리할 로직

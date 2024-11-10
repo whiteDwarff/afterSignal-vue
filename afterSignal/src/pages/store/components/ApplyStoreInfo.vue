@@ -67,7 +67,6 @@
       dense
       outlined
       color="red-3"
-      maxlength="5"
       lazy-rules
       hide-bottom-space
     />
@@ -118,7 +117,7 @@
       :thumbnail="{ enable: true }"
       :fileRequired="true"
       @upload-error="$emit('upload-error')"
-      @upload-success="$emit('upload-success')"
+      @upload-success="$emit('upload-success', $event)"
       @unregistered-file="if (tab != 'store') tab = 'store';"
     />
   </q-card-section>
