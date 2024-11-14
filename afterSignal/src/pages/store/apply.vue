@@ -11,14 +11,14 @@
         class="q-pt-lg"
       >
         <q-tab
-          name="owner"
-          label="Owner Info"
+          name="store"
+          label="Store Info"
           :ripple="false"
           class="cursor-pointer"
         />
         <q-tab
-          name="store"
-          label="Store Info"
+          name="owner"
+          label="Owner Info"
           :ripple="false"
           class="cursor-pointer"
         />
@@ -26,9 +26,6 @@
 
       <!-- tab panels -->
       <q-tab-panels v-model="tab" animated :keep-alive="true">
-        <q-tab-panel name="owner">
-          <ApplyOwnerInfo v-model="form" />
-        </q-tab-panel>
         <q-tab-panel name="store">
           <ApplyStoreInfo
             v-model="form"
@@ -37,7 +34,11 @@
             :changeDistrictByOptions
             @upload-error="error"
             @upload-success="success($event)"
+            ref="refChild"
           />
+        </q-tab-panel>
+        <q-tab-panel name="owner">
+          <ApplyOwnerInfo v-model="form" />
         </q-tab-panel>
       </q-tab-panels>
 
@@ -56,8 +57,8 @@
       <q-card-section class="q-py-none">
         <div class="flex justify-between">
           <q-btn
-            v-if="tab == 'store'"
-            @click="tab = 'owner'"
+            v-if="tab == 'owner'"
+            @click="tab = 'store'"
             :ripple="false"
             flat
           >
@@ -70,8 +71,8 @@
           </q-btn>
           <q-space />
           <q-btn
-            v-if="tab == 'owner'"
-            @click="tab = 'store'"
+            v-if="tab == 'store'"
+            @click="tab = 'owner'"
             :ripple="false"
             flat
           >
@@ -84,6 +85,7 @@
           </q-btn>
         </div>
       </q-card-section>
+      <q-btn label="aaaa" @click="callTestFunction" />
     </q-form>
   </q-card>
 </template>
@@ -93,7 +95,7 @@ import { provide } from 'vue';
 
 const router = useRouter();
 
-const tab = ref('owner');
+const tab = ref('store');
 
 // input form
 const form = ref({
@@ -150,6 +152,16 @@ const changeDistrictByOptions = (val) => {
 
 const submit = () => {
   if (
+    // store valid
+    form.value.storeName == '' ||
+    form.value.storeOtherTel == '' ||
+    form.value.url == '' ||
+    form.value.postCode == ''
+  ) {
+    tab.value = 'store';
+    return;
+  } else if (
+    // owner valid
     form.value.ownerName == '' ||
     form.value.businessNumber == '' ||
     form.email == '' ||
@@ -169,13 +181,6 @@ const submit = () => {
       return baseNotify('사업자등록증을 첨부해주세요.', {
         type: 'warning',
       });
-  } else {
-    if (!form.value.postCode) {
-      return baseNotify('주소를 선택해주세요.', {
-        type: 'warning',
-      });
-    }
-    tab.value = 'store';
   }
   isSubmitState.value = true;
 };
@@ -189,6 +194,14 @@ const success = (storeSeq) => {
 const error = () => {
   baseNotify('Faild Appply!!', { type: 'warning' });
   isSubmitState.value = false;
+};
+
+const refChild = ref(null);
+
+const callTestFunction = () => {
+  if (refChild.value) {
+    refChild.value.test(); // 자식 컴포넌트의 test 함수 호출
+  }
 };
 
 // 새로고침, 뒤로가기, 페이지 나가기 방지

@@ -37,11 +37,11 @@ import Dropzone from 'dropzone';
  *    - dz-message (드랍존 내부 메시지)
  *    - type    : String
  *    - default : ''
- * @ext        
+ * @ext
  *    - extensions (파일 확장자)
  *    - type    : String
  *    - default : .jpeg,.jpg,.png,.gif
- * @thumbnail 
+ * @thumbnail
  *    - 업로드 시 썸네일 활성화 여부
  *    - type    : Object (enable, width, height)
  *    - default : { enable: false }
@@ -200,20 +200,9 @@ onMounted(() => {
   });
   watchEffect(async () => {
     if (isSubmitState.value) {
-      // 첨부파일 등록이 필수인 경우
-      if (props.fileRequired && !dropzone.files.length) {
-        emits('unregistered-file');
-        isSubmitState.value = false;
-        return baseNotify(props.errorMessage, { type: 'warning' });
-      } else {
-        isLoadingState.value = true;
-        dropzone.processQueue();
-      }
-
       // 첨부파일 등록이 필수가 아닌 경우
       if (!props.fileRequired) {
         const formData = new FormData();
-
         for (let key of Object.keys(form.value)) {
           formData.append(key, form.value[key]);
         }
@@ -231,6 +220,18 @@ onMounted(() => {
           emits('upload-error');
         } finally {
           isLoadingState.value = false;
+        }
+      }
+      // 첨부파일 등록이 필수인 경우
+      else {
+        // 파일등록이 필수이지만 파일을 선택하지 않은 경우
+        if (props.fileRequired && !dropzone.files.length) {
+          emits('unregistered-file');
+          isSubmitState.value = false;
+          return baseNotify(props.errorMessage, { type: 'warning' });
+        } else {
+          isLoadingState.value = true;
+          dropzone.processQueue();
         }
       }
     }

@@ -46,7 +46,8 @@
   <!-- URL -->
   <q-card-section class="q-pb-none">
     <small class="block q-mb-sm"
-      >* URL (자사 혹은 네이버 플레이스 URL을 입력해주세요)</small
+      >* URL (자사 혹은 네이버 플레이스 URL을 입력해주세요. 프로토콜[http://,
+      https://] 필수 입력)</small
     >
     <q-input
       v-model="form.url"
@@ -104,7 +105,7 @@
     </div>
   </q-card-section>
   <!-- 카카오 주소 검색 -->
-  <KakaoAdress v-model="form">
+  <KakaoAdress v-model="form" :required="true">
     <small class="block q-mb-sm">* 주소</small>
   </KakaoAdress>
   <q-card-section class="q-pb-none under-line">
@@ -146,4 +147,11 @@ const props = defineProps({
 const form = defineModel();
 
 const tab = defineModel('tab');
+
+const test = () => {
+  alert(1111);
+};
+defineExpose({
+  test,
+});
 </script>

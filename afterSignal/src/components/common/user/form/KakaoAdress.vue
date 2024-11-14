@@ -6,11 +6,12 @@
       <div class="col-9">
         <q-input
           v-model="form.postCode"
-          class="bg-grey-3"
+          :rules="[(val) => (!!val && required) || '주소를 선택해주세요.']"
+          bg-color="grey-3"
           dense
           outlined
-          maxlength="10"
           readonly
+          maxlength="10"
           placeholder="우편번호"
           lazy-rules
           hide-bottom-space
@@ -23,6 +24,7 @@
           label="우편번호찾기"
           dense
           unelevated
+          style="height: 40px !important"
         />
       </div>
     </div>
@@ -31,7 +33,8 @@
   <q-card-section class="q-pb-none">
     <q-input
       v-model="form.addr"
-      class="full-width bg-grey-3"
+      class="full-width"
+      bg-color="grey-3"
       dense
       outlined
       maxlength="50"
@@ -68,6 +71,13 @@
 </template>
 
 <script setup>
+const props = defineProps({
+  required: {
+    type: Boolean,
+    default: () => true,
+  },
+});
+
 // form info
 const form = defineModel({ required: true });
 // extra adress ref

@@ -1,6 +1,6 @@
 <template>
   <q-card flat class="user-form-wrap q-py-xl">
-    <q-card-section class="q-pa-none">
+    <q-card-section class="">
       <PageSubTitle title="Apply Successed !" />
       <br />
       <p class="text-center">
@@ -54,7 +54,11 @@
           </tr>
           <tr>
             <th>url</th>
-            <td>{{ store.info?.url }}</td>
+            <td>
+              <a :href="store.info?.url" target="_blank" class="under-line">{{
+                store.info?.url
+              }}</a>
+            </td>
             <th>인스타그램</th>
             <td>{{ store.info?.instagram }}</td>
           </tr>
@@ -71,12 +75,16 @@
         </tbody>
       </table>
       <div>
-        <template v-for="item of store.fileList" :key="item.fileSeq">
-          <img
-            v-if="item.type == 'image'"
-            :src="`localhost:8080${item.filePath}${item.saveFileName}.jpeg`"
-          />
-        </template>
+        <ul class="row q-col-gutter-x-md q-pa-none">
+          <template v-for="item of store.fileList" :key="item.fileSeq">
+            <li v-if="item.type == 'image'" class="col-12 col-sm-6 col-md-3">
+              <img
+                :src="`${BASE_URL}${item.filePath}/${item.saveFileName}`"
+                class="full-width"
+              />
+            </li>
+          </template>
+        </ul>
       </div>
     </q-card-section>
   </q-card>
@@ -86,6 +94,7 @@
 const route = useRoute();
 
 const store = ref({});
+const BASE_URL = process.env.SERVER_PORT;
 
 const getStoreInfo = async () => {
   isLoadingState.value = true;
