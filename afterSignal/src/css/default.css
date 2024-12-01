@@ -43,7 +43,10 @@ a {
 .decoration-none {
   text-decoration: none;
 }
-
+.underline {
+  text-decoration: underline !important;
+  text-underline-offset: 5px;
+}
 .underline-hover {
   transition: 0.4s ease 0s;
 }

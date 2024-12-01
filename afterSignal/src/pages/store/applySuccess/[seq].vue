@@ -32,7 +32,18 @@
           </tr>
           <tr>
             <th>사업자등록증</th>
-            <td colspan="3"></td>
+            <td colspan="3">
+              <template v-for="item of store.fileList" :key="item.fileSeq">
+                <span
+                  @click="storeFileDown(item.fileSeq)"
+                  v-if="item.fileSeq == 1"
+                  class="cursor-pointer underline"
+                >
+                  <q-icon name="sym_o_download" size="19px" color="grey-14" />
+                  {{ item.orgFileName }}
+                </span>
+              </template>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -53,14 +64,22 @@
             <td>{{ store.info?.storeNumber }}</td>
           </tr>
           <tr>
-            <th>url</th>
+            <th>URL</th>
             <td>
-              <a :href="store.info?.url" target="_blank" class="under-line">{{
+              <a :href="store.info?.url" target="_blank" class="underline">{{
                 store.info?.url
               }}</a>
             </td>
             <th>인스타그램</th>
-            <td>{{ store.info?.instagram }}</td>
+            <td>
+              <a
+                :href="` https://www.instagram.com/${store.info?.instagram}`"
+                target="_blank"
+                class="underline"
+                >{{ store.info?.instagram }}</a
+              >
+              <!-- {{ store.info?.instagram }} -->
+            </td>
           </tr>
           <tr>
             <th>지역</th>
@@ -77,7 +96,11 @@
       <div>
         <ul class="row q-col-gutter-x-md q-pa-none">
           <template v-for="item of store.fileList" :key="item.fileSeq">
-            <li v-if="item.type == 'image'" class="col-12 col-sm-6 col-md-3">
+            <li
+              @click="storeFileDown(item.fileSeq)"
+              v-if="item.type == 'image'"
+              class="col-12 col-sm-6 col-md-3 cursor-pointer"
+            >
               <img
                 :src="`${BASE_URL}${item.filePath}/${item.saveFileName}`"
                 class="full-width"
@@ -91,6 +114,8 @@
 </template>
 
 <script setup>
+import { baseNotify } from 'src/utils/base-notify';
+
 const route = useRoute();
 
 const store = ref({});
@@ -102,7 +127,6 @@ const getStoreInfo = async () => {
     const { data } = await api.post('/store/getStoreInfo', {
       storeSeq: route.params.seq,
     });
-    console.log(data);
     store.value = data.result;
   } catch (err) {
     console.log(err);
@@ -111,6 +135,36 @@ const getStoreInfo = async () => {
   }
 };
 getStoreInfo();
+
+// 사업자 등록증 다운로드
+const storeFileDown = async (seq) => {
+  isLoadingState.value = true;
+  try {
+    const res = await api.post(
+      '/store/fileDown',
+      {
+        storeSeq: route.params.seq,
+        fileSeq: seq,
+      },
+      {
+        responseType: 'blob',
+      },
+    );
+    if (res) {
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', store.value.fileList[seq - 1].orgFileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } else baseNotify('파일 다운로드 실패하였습니다.', { type: 'warning' });
+  } catch (err) {
+    console.log(err);
+  } finally {
+    isLoadingState.value = false;
+  }
+};
 </script>
 
 <style scoped>
