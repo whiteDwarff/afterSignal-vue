@@ -93,6 +93,7 @@
 <script setup>
 import { provide } from 'vue';
 
+const route = useRoute();
 const router = useRouter();
 
 const tab = ref('store');
@@ -202,6 +203,16 @@ const callTestFunction = () => {
   if (refChild.value) {
     refChild.value.test(); // 자식 컴포넌트의 test 함수 호출
   }
+};
+
+console.log(route.query?.seq);
+
+if (route.query?.seq) {
+}
+
+const getPlaceInfo = async (storeSeq) => {
+  const { data } = await api.post('', storeSeq);
+  console.log(data);
 };
 
 // 새로고침, 뒤로가기, 페이지 나가기 방지
